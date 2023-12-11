@@ -1,10 +1,67 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import { useContext } from "react";
+import ReactDOM from "react-dom/client";
+import "./index.sass";
+import App from "./App";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import About from "./components/about";
+// import Travels from "./components/travels";
+import Home from "./components/home";
+// import Travel from "./components/travel";
+// import Signin from "./components/signIn";
+// import Login from "./components/login";
+// import UploadForm from "./components/uploadForm";
+import { AuthContext } from "./authContext";
+import { AuthProvider } from "./authContext";
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+const AppContainer = () => {
+  const { signedIn } = useContext(AuthContext);
+
+  const routes = [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          path: "/",
+          element: <Home />,
+        },
+        // {
+        //   path: "cesty",
+        //   element: <Travels />,
+        // },
+        // {
+        //   path: "/onas",
+        //   element: <About />,
+        // },
+        // {
+        //   path: "/cesty/:travelId",
+        //   element: <Travel />,
+        // },
+        // {
+        //   path: "/signin",
+        //   element: <Signin />,
+        // },
+        // {
+        //   path: "/login",
+        //   element: <Login />,
+        // },
+        // {
+        //   path: "/novacesta",
+        //   element: signedIn ? <UploadForm /> : null,
+        // },
+      ],
+    },
+  ];
+
+  const router = createBrowserRouter(routes);
+
+  return <RouterProvider router={router} />;
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+root.render(
+  <AuthProvider>
+    <AppContainer />
+  </AuthProvider>
+);
+

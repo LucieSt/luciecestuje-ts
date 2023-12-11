@@ -1,0 +1,58 @@
+.travels
+
+  .travels-banner
+    background-image: url("https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1701772986/IMG_2801_rhzock.jpg")
+
+  .travels-list
+    display: flex
+    flex-direction: column
+    margin: auto
+    padding: 10px
+    gap: 10px
+
+    @media only screen and (min-width: 480px)
+      padding: 1rem 20%
+
+    .travels-new
+      height: 100px
+      background-color: #5ab1c2
+      margin: 0 1rem
+
+    .travels-link-container
+
+      .travels-img
+        height: 30vh
+        position: relative
+
+        img
+          transition: opacity 0.3s ease
+          object-fit: cover
+          width: 100%
+          height: 100%
+          vertical-align: middle
+          // border-radius: 5px
+
+        h3
+          position: absolute
+          top: 50%
+          left: 50%
+          transform: translate(-50%, -50%)
+          font-size: 2rem
+          color: white
+          text-transform: uppercase
+          margin: 0
+          font-weight: 400
+
+          @media only screen and (min-width: 600px)
+            font-size: 3rem
+
+        &:hover
+          img
+            opacity: 0.8
+
+.animate-me
+  opacity: 0
+  transition: opacity 1s ease
+
+.animate-me.visible
+  opacity: 1
