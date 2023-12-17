@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.sass";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import About from "./components/about";
+import About from "./components/about";
 // import Travels from "./components/travels";
 import Home from "./components/home";
 // import Travel from "./components/travel";
@@ -29,10 +29,10 @@ const AppContainer = () => {
         //   path: "cesty",
         //   element: <Travels />,
         // },
-        // {
-        //   path: "/onas",
-        //   element: <About />,
-        // },
+        {
+          path: "/onas",
+          element: <About />,
+        },
         // {
         //   path: "/cesty/:travelId",
         //   element: <Travel />,
