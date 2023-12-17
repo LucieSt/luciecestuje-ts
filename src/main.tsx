@@ -1,4 +1,4 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.sass";
 import App from "./App";
@@ -10,11 +10,11 @@ import Home from "./components/home";
 // import Signin from "./components/signIn";
 // import Login from "./components/login";
 // import UploadForm from "./components/uploadForm";
-import { AuthContext } from "./authContext";
+// import { AuthContext } from "./authContext";
 import { AuthProvider } from "./authContext";
 
 const AppContainer = () => {
-  const { signedIn } = useContext(AuthContext);
+  // const { signedIn } = useContext(AuthContext);
 
   const routes = [
     {

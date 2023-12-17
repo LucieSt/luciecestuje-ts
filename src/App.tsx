@@ -1,22 +1,22 @@
 import "./App.sass";
 // import CloudinarySetup from "./components/cloudinarySetup";
-// import FirebaseSetup from "./components/firebaseSetup";
-// import Navigation from "./components/navigation";
-// import Footer from "./components/footer";
+import FirebaseSetup from "./firebaseSetup";
+import Navigation from "./components/navigation";
+import Footer from "./components/footer";
 import { Outlet } from "react-router-dom";
-// import ScrollToTop from "./components/scrollToTop";
+import ScrollToTop from "./scrollToTop";
 
 function App() {
   return (
     <div className="App">
-      {/* <ScrollToTop /> */}
+      <ScrollToTop />
       {/* <CloudinarySetup /> */}
-      {/* <FirebaseSetup /> */}
-      {/* <Navigation /> */}
+      <Navigation />
       <div className="wrap-container">
         <Outlet />
       </div>
-      {/* <Footer /> */}
+      <FirebaseSetup />
+      <Footer />
     </div>
   );
 }
