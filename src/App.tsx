@@ -1,6 +1,6 @@
 import "./App.sass";
 // import CloudinarySetup from "./components/cloudinarySetup";
-import FirebaseSetup from "./firebaseSetup";
+// import FirebaseSetup from "./firebaseSetup";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import { Outlet } from "react-router-dom";
@@ -15,7 +15,7 @@ function App() {
       <div className="wrap-container">
         <Outlet />
       </div>
-      <FirebaseSetup />
+      {/* <FirebaseSetup /> */}
       <Footer />
     </div>
   );

@@ -4,9 +4,9 @@ import "./index.sass";
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import About from "./components/about";
-// import Travels from "./components/travels";
+import Travels from "./components/travels";
 import Home from "./components/home";
-// import Travel from "./components/travel";
+import Travel from "./components/travel";
 // import Signin from "./components/signIn";
 // import Login from "./components/login";
 // import UploadForm from "./components/uploadForm";
@@ -25,18 +25,18 @@ const AppContainer = () => {
           path: "/",
           element: <Home />,
         },
-        // {
-        //   path: "cesty",
-        //   element: <Travels />,
-        // },
+        {
+          path: "cesty",
+          element: <Travels />,
+        },
         {
           path: "/onas",
           element: <About />,
         },
-        // {
-        //   path: "/cesty/:travelId",
-        //   element: <Travel />,
-        // },
+        {
+          path: "/cesty/:travelId",
+          element: <Travel />,
+        },
         // {
         //   path: "/signin",
         //   element: <Signin />,
