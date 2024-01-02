@@ -5,7 +5,7 @@ import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 const Travel = () => {
-  const [selectedTravelData, setSelectedTravelData] = useState(null);
+  const [selectedTravelData, setSelectedTravelData] = useState<TravelDataProps | null>(null);
 
   const { travelId } = useParams();
   
@@ -34,7 +34,7 @@ const Travel = () => {
 
 
     const foundTravelData = newData.find((cesta) => cesta.title === travelId);
-    setSelectedTravelData(foundTravelData);
+    setSelectedTravelData(foundTravelData || null);
   };
 
   useEffect(() => {
@@ -63,16 +63,16 @@ const Travel = () => {
           <p>{text}</p>
 
           <ul className="travel-container">
-            {images.map((image, index) => {
+            {images?.map((image, index) => {
               return (
                 <li>
                   <img
                     key={image}
                     className="travel-image"
-                    id={index}
+                    id={index.toString()}
                     src={image}
                     width="100%"
-                    onClick={(e) => handleClick(e, index)}
+                    // onClick={(e) => handleClick(e, index)}
                     alt={image}
                   ></img>
                 </li>
