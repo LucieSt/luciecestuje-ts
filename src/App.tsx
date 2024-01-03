@@ -1,5 +1,5 @@
 import "./App.sass";
-// import CloudinarySetup from "./components/cloudinarySetup";
+// import CloudinarySetup from "./cloudinarySetup";
 // import FirebaseSetup from "./firebaseSetup";
 import Navigation from "./components/navigation";
 import Footer from "./components/footer";

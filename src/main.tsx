@@ -1,4 +1,4 @@
-// import { useContext } from "react";
+import { useContext } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.sass";
 import App from "./App";
@@ -7,14 +7,14 @@ import About from "./components/about";
 import Travels from "./components/travels";
 import Home from "./components/home";
 import Travel from "./components/travel";
-// import Signin from "./components/signIn";
-// import Login from "./components/login";
-// import UploadForm from "./components/uploadForm";
-// import { AuthContext } from "./authContext";
+import Signin from "./components/signIn";
+import Login from "./components/logIn";
+import UploadForm from "./components/uploadForm";
+import { AuthContext } from "./authContext";
 import { AuthProvider } from "./authContext";
 
 const AppContainer = () => {
-  // const { signedIn } = useContext(AuthContext);
+  const { signedIn } = useContext(AuthContext);
 
   const routes = [
     {
@@ -37,18 +37,18 @@ const AppContainer = () => {
           path: "/cesty/:travelId",
           element: <Travel />,
         },
-        // {
-        //   path: "/signin",
-        //   element: <Signin />,
-        // },
-        // {
-        //   path: "/login",
-        //   element: <Login />,
-        // },
-        // {
-        //   path: "/novacesta",
-        //   element: signedIn ? <UploadForm /> : null,
-        // },
+        {
+          path: "/signin",
+          element: <Signin />,
+        },
+        {
+          path: "/login",
+          element: <Login />,
+        },
+        {
+          path: "/novacesta",
+          element: signedIn ? <UploadForm /> : null,
+        },
       ],
     },
   ];
