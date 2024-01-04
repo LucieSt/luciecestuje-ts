@@ -15,7 +15,7 @@ interface TravelDataProps {
 
 const Travels = () => {
 
-    const [travelData, setTravelData] = useState<TravelDataProps[]>([]);
+  const [travelData, setTravelData] = useState<TravelDataProps[]>([]);
   const { signedIn } = useContext(AuthContext);
 
   const displayData = async () => {
@@ -34,10 +34,14 @@ const Travels = () => {
 
   return (
     <div className="travels">
-      <div className="travels-banner banner"></div>
+      <div className="travels-banner banner">
+        <div>
+          <h2 className='banner-headline'>NASE CESTY</h2>
+          <p className='banner-subheadline'>tady jsou cesty, kdere jsme v prubehu let podnikli, sami nebo se Zdenou</p>
+        </div>
+      </div>
 
       <div className="content">
-        <p>blabla fhbjdsjh<br />bsdjsdfh sf <br />hjksfghdfndf   fdf gfh jkfh sfj k f<br />sjh fkj  dgdgg df d gdfgsfbksfb f<br />bfsd bfsfb<br />s bfsd f</p>
 
         <div className="travels-list">
           {signedIn && (
