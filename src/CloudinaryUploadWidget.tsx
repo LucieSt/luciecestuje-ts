@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { createContext, useEffect, useState, Dispatch, SetStateAction } from "react";
 
 declare global {
   interface Window {
@@ -6,58 +6,94 @@ declare global {
   }
 }
 
-let cloudinary = window.cloudinary;
+// Create a context to manage the script loading state
+const CloudinaryScriptContext = createContext({ loaded: false });
 
-interface ErrorTypeStructure {
-  message: string;
+interface UwConfigType {
+  cloudName: string;
+  uploadPreset: string;
 }
 
-interface ResultTypeStructure {
-  event: string;
-  info: ImageInfoType;
-}
-
-interface ImageInfoType {
+interface ImageInfoStructure {
   secure_url: string;
 }
 
-interface CloudinaryUploadWidgetStructure {
-  onImageUpload: (imageInfo: ImageInfoType) => void;
+interface CloudinaryUploadWidgetProps {
+  uwConfig: UwConfigType;
+  setPublicId: Dispatch<SetStateAction<string>>;
+  onImageUpload?: (imageInfo: ImageInfoStructure) => void;
 }
 
-class CloudinaryUploadWidget extends Component<CloudinaryUploadWidgetStructure> {
+interface UploadResult {
+  event: string;
+  info: {
+    public_id: string;
+    secure_url: string; // Add this if Cloudinary provides it in the upload result
+  };
+}
 
-  componentDidMount() {
+function CloudinaryUploadWidget({ uwConfig, setPublicId, onImageUpload }: CloudinaryUploadWidgetProps) {
+  const [loaded, setLoaded] = useState(false);
+  const [widgetCreated, setWidgetCreated] = useState(false);
 
-    var myWidget = cloudinary.createUploadWidget(
-      {
-        cloudName: import.meta.env.VITE_CLOUDINARY_CLOUD_NAME,
-        uploadPreset: import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET,
-      },
-      (error: ErrorTypeStructure | null, result: ResultTypeStructure) => {
-        if (!error && result && result.event === "success") {
-          console.log("Done! Here is the image info: ", result.info);
-          const imageInfo = result.info;
-          this.props.onImageUpload(imageInfo);
-        }
+  useEffect(() => {
+    // Check if the script is already loaded
+    if (!loaded) {
+      const uwScript = document.getElementById("uw");
+      if (!uwScript) {
+        // If not loaded, create and load the script
+        const script = document.createElement("script");
+        script.setAttribute("async", "");
+        script.setAttribute("id", "uw");
+        script.src = "https://upload-widget.cloudinary.com/global/all.js";
+        script.addEventListener("load", () => setLoaded(true));
+        document.body.appendChild(script);
+      } else {
+        // If already loaded, update the state
+        setLoaded(true);
       }
-    );
-    document.getElementById("upload_widget")?.addEventListener(
-      "click",
-      function () {
-        myWidget.open();
-      },
-      false
-    );
-  }
+    }
+  }, [loaded]);
 
-  render() {
-    return (
-      <button type="button" id="upload_widget" className="cloudinary-button">
+  const initializeCloudinaryWidget = () => {
+    if (loaded && !widgetCreated) {
+      var myWidget = window.cloudinary.createUploadWidget(
+        uwConfig,
+        (error: Error | null, result: UploadResult | null) => {
+          if (!error && result && result.event === "success") {
+            console.log("Done! Here is the image info: ", result.info);
+            setPublicId(result.info.public_id);
+            if(onImageUpload) {
+              onImageUpload(result.info);
+            }
+          }
+        }
+      );  
+      document.getElementById("upload_widget")?.addEventListener(
+        "click",
+        function () {
+          myWidget.open();
+        },
+        false
+      );
+      setWidgetCreated(true);
+      myWidget.open();      
+    }
+  };
+
+  return (
+    <CloudinaryScriptContext.Provider value={{ loaded }}>
+      <button
+        type="button"
+        id="upload_widget"
+        className="cloudinary-button"
+        onClick={initializeCloudinaryWidget}
+      >
         Upload
       </button>
-    );
-  }
+    </CloudinaryScriptContext.Provider>
+  );
 }
 
 export default CloudinaryUploadWidget;
+export { CloudinaryScriptContext };

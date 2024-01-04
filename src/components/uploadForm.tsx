@@ -1,7 +1,7 @@
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "./../firebase";
 import { useState } from "react";
-import CloudinaryUploadWidget from "../CloudinaryUploadWidget2";
+import CloudinaryUploadWidget from "../CloudinaryUploadWidget";
 import "./../styles/uploadForm.sass";
 
 interface ImageInfoStructure {
