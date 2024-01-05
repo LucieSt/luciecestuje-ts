@@ -2,6 +2,15 @@ import './../styles/zdena.sass'
 import './../App.sass';
 
 const Zdena = () => {
+
+	let images = [
+		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
+		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg", 
+		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg", 
+		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg", 
+		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg"
+	]
+
   return (
     <div className="zdena-wrapper">
       <div className="zdena-banner banner">
@@ -31,6 +40,20 @@ const Zdena = () => {
           našich cestách.</p>
         </div>
       </div>
+      <ul className="images-container">
+				{images?.map((image, index) => {
+        return (
+					<li>
+						<img
+						key={index}
+						src={image}
+						width="100%"
+						alt="image"
+						></img>
+					</li>
+					);
+				})}
+      </ul>
     </div>
   );
 };

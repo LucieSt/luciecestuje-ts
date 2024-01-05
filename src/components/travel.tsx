@@ -62,13 +62,12 @@ const Travel = () => {
 
           <p>{text}</p>
 
-          <ul className="travel-container">
+          <ul className="images-container">
             {images?.map((image, index) => {
               return (
                 <li>
                   <img
                     key={image}
-                    className="travel-image"
                     id={index.toString()}
                     src={image}
                     width="100%"
