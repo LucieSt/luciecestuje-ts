@@ -47,7 +47,7 @@ const UploadForm = () => {
     <div className="form-container">
       <form className="form">
         <div className="form-item">
-          <label>nazev cesty</label>
+          <label>název cesty</label>
           <input
             type="text"
             value={title}
@@ -68,7 +68,7 @@ const UploadForm = () => {
         </div>
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>
-            ulozit novou cestu
+            uložit novou cestu
           </button>
         </div>
       </form>

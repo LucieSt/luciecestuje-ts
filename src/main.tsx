@@ -12,6 +12,7 @@ import Login from "./components/logIn";
 import UploadForm from "./components/uploadForm";
 import { AuthContext } from "./authContext";
 import { AuthProvider } from "./authContext";
+import Zdena from "./components/zdena";
 
 const AppContainer = () => {
   const { signedIn } = useContext(AuthContext);
@@ -32,6 +33,10 @@ const AppContainer = () => {
         {
           path: "/onas",
           element: <About />,
+        },
+        {
+          path: "/zdena",
+          element: <Zdena />,
         },
         {
           path: "/cesty/:travelId",

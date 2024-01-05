@@ -3,7 +3,7 @@ import "./../styles/footer.sass";
 const Footer = () => {
   return (
     <footer className="footer">
-      <p>@ luciecestuje 2023</p>
+      <p>@ luciecestuje 2024</p>
     </footer>
   );
 };

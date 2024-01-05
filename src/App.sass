@@ -4,6 +4,7 @@
   min-height: 100vh
   // max-width: 1790px
   margin: auto
+  letter-spacing: .36px
 
 .wrap-container
   padding-bottom: 2.5rem
@@ -11,6 +12,10 @@
 a
   color: #000000
   text-decoration: none
+
+p
+  font-size: 17px
+  line-height: 1.6em
 
 h2
   margin: 0
@@ -36,5 +41,46 @@ h2
   color: white
 
 .content
-  max-width: 1450px
+  // max-width: 1450px
   margin: auto
+
+.text-container
+  max-width: 1050px
+  margin: auto
+  padding: 50px 16.6% 50px 8%
+
+  @media only screen and (max-width: 480px)
+    padding: 3rem 0
+
+.text-content
+  text-align: left
+  max-width: 750px
+  margin: auto
+  padding: 0 17px 17px
+
+::-moz-selection /* Code for Firefox */
+  color: white
+  background: black
+
+::selection
+  color: white
+  background: black
+
+p a
+  position: relative
+  overflow: hidden
+  text-decoration: none
+  color: black
+  &::after
+    content: ""
+    background: rgba(#f9b862, 0.25)
+    position: absolute
+    left: 12px
+    bottom: -6px
+    width: calc(100% - 8px)
+    height: calc(100% - 8px)
+    z-index: -1
+    transition: 0.35s cubic-bezier(0.25, 0.1, 0, 2.05)
+      
+hr
+  border-top: 1px solid black

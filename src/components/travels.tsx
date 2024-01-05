@@ -36,8 +36,8 @@ const Travels = () => {
     <div className="travels">
       <div className="travels-banner banner">
         <div>
-          <h2 className='banner-headline'>NASE CESTY</h2>
-          <p className='banner-subheadline'>tady jsou cesty, kdere jsme v prubehu let podnikli, sami nebo se Zdenou</p>
+          <h2 className='banner-headline'>NAŠE CESTY</h2>
+          <p className='banner-subheadline'>PUTOVÁNÍ ZA NOVÝMI ZÁŽITKY</p>
         </div>
       </div>
 

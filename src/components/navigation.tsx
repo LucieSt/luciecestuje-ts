@@ -40,14 +40,17 @@ const Navigation = () => {
             CESTY
           </Link>
           <Link to="/onas" className="nav-about nav-link">
-            O NAS
+            O NÁS
+          </Link>
+          <Link to="/zdena" className="nav-zdena nav-link">
+            ZDENA
           </Link>
           <Link to="/" className="nav-home nav-link">
-            DOMU
+            DOMŮ
           </Link>
           {signedIn && (
             <span className="nav-signout nav-link" onClick={handleLogout}>
-              ODHLASIT
+              ODHLÁSIT
             </span>
           )}
         </nav>
