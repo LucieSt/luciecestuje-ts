@@ -1,21 +1,28 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import './../styles/hamburger.sass'
 import './../App.sass';
 
-const Hamburger = () => {
+interface HamburgerProps {
+  isHamburgerOpen: boolean;
+  onChange: (isOpen: boolean) => void;
+}
 
-  const [hamburgerOpen, setHamburgerOpen] = useState(false)
+const Hamburger: React.FC<HamburgerProps> = ({ isHamburgerOpen, onChange }) => {
+
+  // const [hamburgerOpen, setHamburgerOpen] = useState(false)
 
   const handleClick = () => {
-    setHamburgerOpen(!hamburgerOpen);
+    onChange(!isHamburgerOpen);
   }
 
   return (
-    <div className="hamburger" onClick={handleClick}>
-      <div className={hamburgerOpen ? 'burger burger1' : 'burger'}/>
-      <div className={hamburgerOpen ? 'burger burger2' : 'burger'} />
-      <div className={hamburgerOpen ? 'burger burger3' : 'burger'} />
-    </div>
+    <>
+      <div className="hamburger" onClick={handleClick}>
+        <div className={isHamburgerOpen ? 'burger burger1' : 'burger'}/>
+        <div className={isHamburgerOpen ? 'burger burger2' : 'burger'} />
+        <div className={isHamburgerOpen ? 'burger burger3' : 'burger'} />
+      </div>
+    </>
   );
 };
 
