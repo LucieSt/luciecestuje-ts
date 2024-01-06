@@ -29,7 +29,7 @@ const About = () => {
         <div className="text-content">
           <h2>Prozkoumejte naši Zdenu!</h2>
           <p><br />Chcete vědět více o tom, jak jsme přestavěli naši milovanou dodávku Zdenu na dokonalý domov na kolech?<br /><br />
-          <a href="/zdena">Zde najdete kompletní příběh</a>, od prvních nápadů až po finální realizaci, doprovázený fotografiemi a detaily, které vás mohou inspirovat 
+          <a href="/zdena">Zde&nbsp;najdete&nbsp;kompletní&nbsp;příběh</a>, od prvních nápadů až po finální realizaci, doprovázený fotografiemi a detaily, které vás mohou inspirovat 
           k vytvoření vašeho vlastního domova na kolech!<br /><br /></p>
           <hr /><br /><br />
           <h2>Přihlaste se k odběru našeho newsletteru</h2>

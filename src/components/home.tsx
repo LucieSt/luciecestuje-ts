@@ -29,8 +29,8 @@ const Home: React.FC = () => {
         <div className="text-content">
           <p>
           <b>Kam se vydat?</b><br /><br />
-          Nenechte si ujít <a href="/cesty">naši poslední cestu</a> nebo prozkoumejte <a href="/cesty">všechny naše cesty</a> a nechte se inspirovat pro vaše další dobrodružství.<br /><br />
-          Zajímá vás, jak cestujeme? <a href="/zdena">Přečtěte si o Zdeně</a>, naší věrné dodávce, a dozvíte se, jak jsme ji vybudovali a přizpůsobili pro naše 
+          Nenechte si ujít <a href="/cesty">naši&nbsp;poslední&nbsp;cestu</a> nebo prozkoumejte <a href="/cesty">všechny&nbsp;naše&nbsp;cesty</a> a nechte se inspirovat pro vaše další dobrodružství.<br /><br />
+          Zajímá vás, jak cestujeme? <a href="/zdena">Přečtěte&nbsp;si&nbsp;o&nbsp;Zdeně</a>, naší věrné dodávce, a dozvíte se, jak jsme ji vybudovali a přizpůsobili pro naše 
           dobrodružství.<br /><br /><br />
           <hr /><br />
           <b>Newsletter</b><br /><br />
