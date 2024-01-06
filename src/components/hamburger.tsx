@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import './../styles/hamburger.sass'
 import './../App.sass';
 
@@ -8,8 +7,6 @@ interface HamburgerProps {
 }
 
 const Hamburger: React.FC<HamburgerProps> = ({ isHamburgerOpen, onChange }) => {
-
-  // const [hamburgerOpen, setHamburgerOpen] = useState(false)
 
   const handleClick = () => {
     onChange(!isHamburgerOpen);

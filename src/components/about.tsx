@@ -36,7 +36,7 @@ const About = () => {
           <p><br />Chcete být první, kdo se dozví o našich nových dobrodružstvích a příbězích z cest?<br /><br />
           Přihlaste se k odběru našeho newsletteru! Stačí zadat váš email níže a budete pravidelně dostávat novinky přímo do vaší schránky. Informujeme vás o nových 
           příspěvcích na blogu, tipy na cestování, a samozřejmě nejnovějších aktualizacích naší cesty se Zdenou.<br /><br />
-          --- Tady bude formular newsletteru ---<br /><br />
+          --- Tady bude formular newsletteru ---<br /><br /><br />
           Děkujeme, že jste součástí naší cestovatelské komunity!</p>
         </div>
       </div>
