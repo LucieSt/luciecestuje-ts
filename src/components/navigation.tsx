@@ -1,9 +1,11 @@
 import { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./../styles/navigation.sass";
+import "./../App.sass"
 import { AuthContext } from "../authContext";
 import { getAuth } from "firebase/auth";
 import { signOut } from "firebase/auth";
+import Hamburger from "./hamburger";
 
 const Navigation = () => {
   const { signedIn } = useContext(AuthContext);
@@ -30,7 +32,7 @@ const Navigation = () => {
   };
 
   return (
-    <header className={`nav-wrapper ${scroll ? "sticky" : ""}`}>
+    <header className={`nav-wrapper ${scroll ? "navigation-sticky" : ""}`}>
       <div className="nav-container">
         <span className="nav-logo">
           <Link to="/">luciecestuje</Link>
@@ -54,6 +56,9 @@ const Navigation = () => {
             </span>
           )}
         </nav>
+
+        <Hamburger />
+
       </div>
     </header>
   );
