@@ -30,7 +30,7 @@ const UploadForm = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log(title, tripStartDate, description, images);
-    const year = new Date(tripStartDate).getFullYear();
+    const year = new Date(tripStartDate).getFullYear().toString();
 
     try {
       const docRef = await addDoc(collection(db, "travels"), {
