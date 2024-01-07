@@ -30,15 +30,17 @@ const UploadForm = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     console.log(title, tripStartDate, description, images);
+    const year = new Date(tripStartDate).getFullYear();
 
     try {
       const docRef = await addDoc(collection(db, "travels"), {
-        title: title,
+        title,
         start_date: tripStartDate,
         end_date: tripEndDate,
         text: description,
-        images: images,
+        images,
         main_image: images[0],
+        year,
       });
       console.log("Document written with ID: ", docRef.id);
 
@@ -50,8 +52,8 @@ const UploadForm = () => {
       setImages([]);
       setPublicId("");
 
-      // Navigate to home page
-      navigate('/');
+      // Navigate to travels
+      navigate('/cesty');
 
       alert("New trip has been saved successfully!");
 
@@ -69,7 +71,7 @@ const UploadForm = () => {
     <div className="form-container">
       <form className="form">
         <div className="form-item">
-          <label>název cesty</label>
+          <label>Název cesty</label>
           <input
             type="text"
             value={title}
@@ -93,24 +95,25 @@ const UploadForm = () => {
           />
         </div>
         <div className="form-item">
-          <label>popis</label>
+          <label>Popis</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>
         </div>
         <div className="form-item">
-          <label>nahrat fotky</label>
+          <label>Nahrát fotky</label>
           <CloudinaryUploadWidget uwConfig={uwConfig} setPublicId={setPublicId} onImageUpload={handleImageUpload}/>
         </div>
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>
-            uložit novou cestu
+            Uložit novou cestu
           </button>
         </div>
       </form>
 
       <div>
+        <br />
         <h2>preview:</h2>
       </div>
     </div>

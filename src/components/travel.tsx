@@ -11,6 +11,7 @@ const Travel = () => {
     title: string;
     start_date: string;
     end_date: string;
+    year: string;
     text: string;
     images: string[];
     main_image: string;
