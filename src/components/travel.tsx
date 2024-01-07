@@ -3,37 +3,32 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { formatTitleToURL } from "../utils";
 
 const Travel = () => {
+
+  interface TravelDataProps {
+    title: string;
+    start_date: string;
+    end_date: string;
+    text: string;
+    images: string[];
+    main_image: string;
+  }
+
   const [selectedTravelData, setSelectedTravelData] = useState<TravelDataProps | null>(null);
 
   const { travelId } = useParams();
-  
-  interface TravelDataProps {
-      title: string;
-      year: string;
-      text: string;
-      images: string[];
-      main_image: string;
-  }
 
   const displayData = async () => {
     const querySnapshot = await getDocs(collection(db, "travels"));
-    // const newData: TravelDataProps[] = querySnapshot.docs.map((doc) => ({
-    //   const data = doc.data() as TravelDataProps;
-    //     //   console.log(doc);
-    //   ...doc.data(),
-    // //   id: doc.id,
-    // }));
 
     const newData: TravelDataProps[] = querySnapshot.docs.map((doc) => {
-      // Cast the data to TravelDataProps
       const data = doc.data() as TravelDataProps;
       return data;
     });
 
-
-    const foundTravelData = newData.find((cesta) => cesta.title === travelId);
+    const foundTravelData = newData.find((cesta) => formatTitleToURL(cesta.title) === travelId);
     setSelectedTravelData(foundTravelData || null);
   };
 
@@ -41,11 +36,7 @@ const Travel = () => {
     displayData();
   }, []);
 
-//   const handleClick = (e, index) => {
-//     console.log(index);
-//   };
-
-  const { title, year, text, images, main_image } = selectedTravelData || {};
+  const { title, start_date, end_date, text, images, main_image } = selectedTravelData || {};
 
   const myStyle = { backgroundImage: `url(${main_image})` }
 
@@ -56,7 +47,7 @@ const Travel = () => {
           <div className="travel-banner banner" style={myStyle}>
             <div>
               <h2 className='banner-headline'>{title}</h2>
-              <p className='banner-subheadline'>{year}</p>
+              <p className='banner-subheadline'>{start_date} - {end_date}</p>
             </div>
           </div>
 
@@ -67,11 +58,10 @@ const Travel = () => {
               return (
                 <li>
                   <img
-                    key={image}
+                    key={index.toString()}
                     id={index.toString()}
                     src={image}
                     width="100%"
-                    // onClick={(e) => handleClick(e, index)}
                     alt={image}
                   ></img>
                 </li>

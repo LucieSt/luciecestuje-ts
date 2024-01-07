@@ -4,11 +4,14 @@ import { useState, useEffect, useContext } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { AuthContext } from "../authContext";
+import { formatTitleToURL } from "../utils";
 
 interface TravelDataProps {
     title: string;
     id: string;
     year: string;
+    start_date: string;
+    end_date: string;
     text: string;
     main_image: string;
 }
@@ -20,10 +23,16 @@ const Travels = () => {
 
   const displayData = async () => {
     await getDocs(collection(db, "travels")).then((querySnapshot) => {
-      const newData = querySnapshot.docs.map((doc) => ({
+      let newData = querySnapshot.docs.map((doc) => ({
         ...doc.data() as TravelDataProps,
         id: doc.id,
       }));
+      // Sort the travels by start_date in descending order (most recent first)
+      newData = newData.sort((a, b) => {
+        const dateA = new Date(a.start_date);
+        const dateB = new Date(b.start_date);
+        return dateB.getTime() - dateA.getTime();
+      });
       setTravelData(newData);
     });
   };
@@ -61,8 +70,8 @@ const Travels = () => {
           )}
           {travelData &&
             travelData.map((cesta) => {
-            //   console.log(cesta);
-              const url = `/cesty/${cesta.title}`;
+              const newTitle = formatTitleToURL(cesta.title);
+              const url = `/cesty/${newTitle}`;
               return (
                 <Link key={cesta.id} to={url}>
                   <div className="travels-link-container">
