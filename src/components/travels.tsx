@@ -19,11 +19,10 @@ interface TravelDataProps {
 
 const Travels = () => {
 
-  const years = [2024, 2023, 2022, 2021, 2020, 2019];
-
   const [travelData, setTravelData] = useState<TravelDataProps[]>([]);
   const { signedIn } = useContext(AuthContext);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [years, setYears] = useState<number[]>([]);
 
   const displayData = async () => {
     let q;
@@ -45,6 +44,12 @@ const Travels = () => {
         ...doc.data() as TravelDataProps,
         id: doc.id,
       }));
+
+      // Extract years if no specific year is selected
+      if (selectedYear === null) {
+        const uniqueYears = new Set(newData.map(travel => parseInt(travel.year)));
+        setYears(Array.from(uniqueYears).sort((a, b) => b - a));
+      }
 
       // Sort the travels by start_date in descending order (most recent first)
       newData.sort((a, b) => {
@@ -75,7 +80,7 @@ const Travels = () => {
           <h2 className='banner-headline'>NAŠE CESTY</h2>
           <p className='banner-subheadline'>PUTOVÁNÍ ZA NOVÝMI ZÁŽITKY</p>
         </div>
-        <TravelsFilter onSelectionChange={handleSelectionChange} years={years} selectedYear={selectedYear}/>
+        {years && <TravelsFilter onSelectionChange={handleSelectionChange} years={years} selectedYear={selectedYear}/>}
       </div>
 
       <div className="content">

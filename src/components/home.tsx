@@ -35,10 +35,15 @@ const Home: React.FC = () => {
           <p>
           Nenechte si ujít <a href="/cesty">naši&nbsp;poslední&nbsp;cestu</a> nebo prozkoumejte <a href="/cesty">všechny&nbsp;naše&nbsp;cesty</a> a nechte se inspirovat pro vaše další dobrodružství.<br /><br />
           Zajímá vás, jak cestujeme? <a href="/zdena">Přečtěte&nbsp;si&nbsp;o&nbsp;Zdeně</a>, naší věrné dodávce, a dozvíte se, jak jsme ji vybudovali a přizpůsobili pro naše 
-          dobrodružství.<br /><br /><br />
+          dobrodružství.
           </p>
-          <hr /><br />
+        </div>
+      </div>
 
+      <div className="home2-banner banner"></div>
+
+      <div className="text-container">
+        <div className="text-content">
           <h2>Newsletter</h2><br /><br />
           <p>
           Přihlaste se k našemu newsletteru a dozvíte se tak jako první o naší nové cestě!<br /><br />
@@ -56,7 +61,7 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="home2-banner banner"></div>
+      <div className="home3-banner banner"></div>
     </div>
   );
 };
