@@ -32,6 +32,8 @@ const TravelsFilter: React.FC<TravelsFilterProps> = ({ onYearSelectionChange, on
   return (
     <div className="travels-filter-wrapper">
 
+      <br />
+
       {/* FILTR YEARS */}
       <div>
         <ul>
@@ -54,7 +56,8 @@ const TravelsFilter: React.FC<TravelsFilterProps> = ({ onYearSelectionChange, on
         </ul>
       </div>
 
-      <hr />
+      <br />
+      {/* <hr /> */}
 
       {/* FILTR COUNTRIES */}
       <div>
@@ -77,6 +80,8 @@ const TravelsFilter: React.FC<TravelsFilterProps> = ({ onYearSelectionChange, on
           ))}
         </ul>
       </div>
+
+      <br />
 
     </div>
   );

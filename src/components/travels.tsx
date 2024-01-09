@@ -26,6 +26,7 @@ const Travels = () => {
   const [years, setYears] = useState<number[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [countries, setCountries] = useState<string[]>([]);
+  const [filterIsOpen, setFilterIsOpen] = useState<boolean>(false)
 
   const usePrevious = <T,>(value: T): T | undefined => {
     const ref = useRef<T>();
@@ -98,6 +99,10 @@ const Travels = () => {
     setSelectedCountry(country);
   }
 
+  const handleClickFilter = () => {
+    setFilterIsOpen(!filterIsOpen);
+  }
+
   useEffect(() => {
     setSelectedCountry(null);
     displayData();
@@ -114,6 +119,7 @@ const Travels = () => {
           <h2 className='banner-headline'>NAŠE CESTY</h2>
           <p className='banner-subheadline'>PUTOVÁNÍ ZA NOVÝMI ZÁŽITKY</p>
         </div>
+        <div onClick={handleClickFilter} className="travels-filter-text">FILTR</div>
       </div>
 
       <div className="content">
@@ -121,7 +127,7 @@ const Travels = () => {
         <div className="travels-list">
 
           {/* FILTER TRAVELS BY YEARS */}
-          <div className="travels-link-container">
+          {filterIsOpen && <div className="travels-link-container">
             <div>
               {years && countries &&
                 <TravelsFilter
@@ -134,7 +140,7 @@ const Travels = () => {
                 />
               }
             </div>
-          </div>
+          </div>}
 
           {/* ADD NEW TRAVEL, IF SIGNED IN */}
           {signedIn && (
