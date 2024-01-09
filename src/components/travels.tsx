@@ -80,16 +80,24 @@ const Travels = () => {
           <h2 className='banner-headline'>NAŠE CESTY</h2>
           <p className='banner-subheadline'>PUTOVÁNÍ ZA NOVÝMI ZÁŽITKY</p>
         </div>
-        {years && <TravelsFilter onSelectionChange={handleSelectionChange} years={years} selectedYear={selectedYear}/>}
       </div>
 
       <div className="content">
 
         <div className="travels-list">
+
+          {/* FILTER TRAVELS BY YEARS */}
+          <div className="travels-link-container">
+            <div>
+              {years && <TravelsFilter onSelectionChange={handleSelectionChange} years={years} selectedYear={selectedYear}/>}
+            </div>
+          </div>
+
+          {/* ADD NEW TRAVEL, IF SIGNED IN */}
           {signedIn && (
             <Link to="/novacesta">
               <div className="travels-link-container">
-                <div className="travels-img">
+                <div className="travels-container">
                   <img
                     src="https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1684698763/xhyozoujfrrnzisptc6v.jpg"
                     alt="new"
@@ -101,6 +109,8 @@ const Travels = () => {
               </div>
             </Link>
           )}
+
+          {/* LIST OF TRAVELS */}
           {travelData &&
             travelData.map((cesta) => {
               const newTitle = formatTitleToURL(cesta.title);
@@ -108,7 +118,7 @@ const Travels = () => {
               return (
                 <Link key={cesta.id} to={url}>
                   <div className="travels-link-container">
-                    <div className="travels-img">
+                    <div className="travels-container">
                       <img
                         src={cesta.main_image}
                         alt={cesta.title}
