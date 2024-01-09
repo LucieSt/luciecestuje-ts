@@ -11,6 +11,7 @@ interface ImageInfoStructure {
 
 const UploadForm = () => {
   const [title, setTitle] = useState("");
+  const [country, setCountry] = useState("");
   const [tripStartDate, setTripStartDate] = useState("");
   const [tripEndDate, setTripEndDate] = useState("");
   const [description, setDescription] = useState("");
@@ -29,12 +30,14 @@ const UploadForm = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(title, tripStartDate, description, images);
     const year = new Date(tripStartDate).getFullYear().toString();
+
+    console.log(title, country, tripStartDate, year, description, images);
 
     try {
       const docRef = await addDoc(collection(db, "travels"), {
         title,
+        country,
         start_date: tripStartDate,
         end_date: tripEndDate,
         text: description,
@@ -46,6 +49,7 @@ const UploadForm = () => {
 
       // Reset form fields
       setTitle("");
+      setCountry("");
       setTripStartDate("");
       setTripEndDate("");
       setDescription("");
@@ -76,6 +80,14 @@ const UploadForm = () => {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="form-item">
+          <label>Země</label>
+          <input
+            type="text"
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
           />
         </div>
         <div className="form-item">

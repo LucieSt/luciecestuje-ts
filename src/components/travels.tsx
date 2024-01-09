@@ -1,6 +1,6 @@
 import "./../styles/travels.sass";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { AuthContext } from "../authContext";
@@ -9,6 +9,7 @@ import TravelsFilter from "./travelsFilter";
 
 interface TravelDataProps {
     title: string;
+    country: string;
     id: string;
     year: string;
     start_date: string;
@@ -23,18 +24,37 @@ const Travels = () => {
   const { signedIn } = useContext(AuthContext);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [years, setYears] = useState<number[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [countries, setCountries] = useState<string[]>([]);
+
+  const usePrevious = <T,>(value: T): T | undefined => {
+    const ref = useRef<T>();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  const prevSelectedYear = usePrevious(selectedYear);
+  const prevSelectedCountry = usePrevious(selectedCountry);
 
   const displayData = async () => {
-    let q;
+    let queries = [];
 
     if (selectedYear) {
-      // Query for travels where the year field matches the selectedYear
-      q = query(
-        collection(db, "travels"),
-        where("year", "==", selectedYear.toString())  // Convert to string if necessary
-      );
+      queries.push(where("year", "==", selectedYear.toString()));
+    }
+    if (selectedCountry && selectedCountry !== prevSelectedCountry) {
+      queries.push(where("country", "==", selectedCountry));
+      if (selectedYear) {
+        queries.push(where("year", "==", selectedYear.toString()));
+      }
+    }
+
+    let q;
+    if (queries.length > 0) {
+      q = query(collection(db, "travels"), ...queries);
     } else {
-      // If no year is selected, fetch all travels
       q = query(collection(db, "travels"));
     }
 
@@ -45,13 +65,19 @@ const Travels = () => {
         id: doc.id,
       }));
 
-      // Extract years if no specific year is selected
-      if (selectedYear === null) {
-        const uniqueYears = new Set(newData.map(travel => parseInt(travel.year)));
-        setYears(Array.from(uniqueYears).sort((a, b) => b - a));
+      if (selectedYear && selectedYear !== prevSelectedYear) {
+        const uniqueCountries = new Set(newData.map(travel => travel.country));
+        setCountries(Array.from(uniqueCountries).sort());
       }
 
-      // Sort the travels by start_date in descending order (most recent first)
+      if (!selectedYear && !selectedCountry) {
+        const uniqueYears = new Set(newData.map(travel => parseInt(travel.year)));
+        setYears(Array.from(uniqueYears).sort((a, b) => b - a));
+
+        const uniqueCountries = new Set(newData.map(travel => travel.country));
+        setCountries(Array.from(uniqueCountries).sort());
+      }
+
       newData.sort((a, b) => {
         const dateA = new Date(a.start_date);
         const dateB = new Date(b.start_date);
@@ -61,17 +87,25 @@ const Travels = () => {
       setTravelData(newData);
     } catch (error) {
       console.error("Error fetching travels:", error);
-      // Handle the error appropriately
     }
   };
 
-  const handleSelectionChange = (year: number | null) => {
+  const handleYearSelectionChange = (year: number | null) => {
     setSelectedYear(year);
   }
 
+  const handleCountrySelectionChange = (country: string | null) => {
+    setSelectedCountry(country);
+  }
+
   useEffect(() => {
+    setSelectedCountry(null);
     displayData();
   }, [selectedYear]);
+
+  useEffect(() => {
+    displayData();
+  }, [selectedCountry]);
 
   return (
     <div className="travels">
@@ -89,7 +123,16 @@ const Travels = () => {
           {/* FILTER TRAVELS BY YEARS */}
           <div className="travels-link-container">
             <div>
-              {years && <TravelsFilter onSelectionChange={handleSelectionChange} years={years} selectedYear={selectedYear}/>}
+              {years && countries &&
+                <TravelsFilter
+                  onYearSelectionChange={handleYearSelectionChange}
+                  onCountrySelectionChange={handleCountrySelectionChange}
+                  years={years}
+                  selectedYear={selectedYear}
+                  countries={countries}
+                  selectedCountry={selectedCountry}
+                />
+              }
             </div>
           </div>
 
@@ -125,7 +168,7 @@ const Travels = () => {
                         width="100%"
                         height="auto"
                       />
-                      <h3>{cesta.title} {cesta.year}</h3>
+                      <h3>{cesta.title} {cesta.year} {cesta.country}</h3>
                     </div>
                   </div>
                 </Link>
