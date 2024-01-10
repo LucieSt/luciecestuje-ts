@@ -1,4 +1,5 @@
 import "./../styles/travel.sass";
+import "./../App.sass"
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { db } from "./../firebase";

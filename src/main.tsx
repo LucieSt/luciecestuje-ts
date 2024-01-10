@@ -7,7 +7,7 @@ import About from "./components/about";
 import Travels from "./components/travels";
 import Home from "./components/home";
 import Travel from "./components/travel";
-import Signin from "./components/signIn";
+// import Signin from "./components/signIn";
 import Login from "./components/logIn";
 import UploadForm from "./components/uploadForm";
 import { AuthContext } from "./authContext";
@@ -42,10 +42,10 @@ const AppContainer = () => {
           path: "/cesty/:travelId",
           element: <Travel />,
         },
-        {
-          path: "/signin",
-          element: <Signin />,
-        },
+        // {
+        //   path: "/signin",
+        //   element: <Signin />,
+        // },
         {
           path: "/login",
           element: <Login />,

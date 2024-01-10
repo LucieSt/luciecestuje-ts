@@ -3,7 +3,9 @@ import { db } from "./../firebase";
 import { useState } from "react";
 import CloudinaryUploadWidget from "../CloudinaryUploadWidget";
 import "./../styles/uploadForm.sass";
+import "./../App.sass"
 import { useNavigate } from "react-router-dom";
+import { ReactSortable } from 'react-sortablejs';
 
 interface ImageInfoStructure {
   secure_url: string;
@@ -71,6 +73,19 @@ const UploadForm = () => {
     setImages((currentImages) => [...currentImages, imageInfo.secure_url]);
   };
 
+  const handleDeleteImage = async (index: number) => {
+    setImages(images.filter((_, imgIndex) => imgIndex !== index));
+  };
+
+  interface SortableItem {
+    id: string;
+    src: string;
+  }
+
+  const onDragEnd = (items: SortableItem[]) => {
+    setImages(items.map(item => item.src)); // Mapping back to string array
+  };
+
   return (
     <div className="form-container">
       <form className="form">
@@ -127,6 +142,24 @@ const UploadForm = () => {
       <div>
         <br />
         <h2>preview:</h2>
+
+        <ReactSortable
+          list={images.map((src, index) => ({ id: index.toString(), src }))}
+          setList={onDragEnd}
+          className="images-container preview-images-container"
+        >
+          {images.map((image, index) => (
+            <li className="images-item" key={index}>
+              <img
+                src={image}
+                alt={`Image ${index}`}
+                width="100%"
+              />
+              <button onClick={() => handleDeleteImage(index)}>X</button>
+            </li>
+          ))}
+        </ReactSortable>
+
       </div>
     </div>
   );
