@@ -36,6 +36,8 @@ const UploadForm = () => {
 
     console.log(title, country, tripStartDate, year, description, images);
 
+    const mainImage = images[0];
+
     try {
       const docRef = await addDoc(collection(db, "travels"), {
         title,
@@ -43,8 +45,8 @@ const UploadForm = () => {
         start_date: tripStartDate,
         end_date: tripEndDate,
         text: description,
+        main_image: mainImage,
         images,
-        main_image: images[0],
         year,
       });
       console.log("Document written with ID: ", docRef.id);
@@ -130,7 +132,11 @@ const UploadForm = () => {
         </div>
         <div className="form-item">
           <label>Nahrát fotky</label>
-          <CloudinaryUploadWidget uwConfig={uwConfig} setPublicId={setPublicId} onImageUpload={handleImageUpload}/>
+          <CloudinaryUploadWidget
+            key={`additional-images-widget`}
+            uwConfig={uwConfig}
+            setPublicId={setPublicId}
+            onImageUpload={handleImageUpload}/>
         </div>
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>
