@@ -18,6 +18,7 @@ const UploadForm = () => {
   const [tripEndDate, setTripEndDate] = useState("");
   const [description, setDescription] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [mapUrl, setMapUrl] = useState<string>("");
 
   const [publicId, setPublicId] = useState("");
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
@@ -38,6 +39,9 @@ const UploadForm = () => {
 
     const mainImage = images[0];
 
+    const newImages = images.slice(1);
+    console.log(publicId);
+
     try {
       const docRef = await addDoc(collection(db, "travels"), {
         title,
@@ -46,8 +50,9 @@ const UploadForm = () => {
         end_date: tripEndDate,
         text: description,
         main_image: mainImage,
-        images,
+        images: newImages,
         year,
+        map_url: mapUrl,
       });
       console.log("Document written with ID: ", docRef.id);
 
@@ -59,6 +64,7 @@ const UploadForm = () => {
       setDescription("");
       setImages([]);
       setPublicId("");
+      setMapUrl("");
 
       // Navigate to travels
       navigate('/cesty');
@@ -131,6 +137,14 @@ const UploadForm = () => {
           ></textarea>
         </div>
         <div className="form-item">
+          <label>Mapa</label>
+          <input
+            type="text"
+            value={mapUrl}
+            onChange={(e) => setMapUrl(e.target.value)}
+          />
+        </div>
+        <div className="form-item">
           <label>Nahrát fotky</label>
           <CloudinaryUploadWidget
             key={`additional-images-widget`}
@@ -138,35 +152,35 @@ const UploadForm = () => {
             setPublicId={setPublicId}
             onImageUpload={handleImageUpload}/>
         </div>
+        <div>
+          <br />
+          <h2>preview:</h2>
+
+          <ReactSortable
+            list={images.map((src, index) => ({ id: index.toString(), src }))}
+            setList={onDragEnd}
+            className="images-container preview-images-container"
+          >
+            {images.map((image, index) => (
+              <li className="images-item" key={index}>
+                <img
+                  src={image}
+                  alt={`Image ${index}`}
+                  width="100%"
+                />
+                <button onClick={() => handleDeleteImage(index)}>X</button>
+              </li>
+            ))}
+          </ReactSortable>
+
+        </div>
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>
             Uložit novou cestu
           </button>
         </div>
       </form>
-
-      <div>
-        <br />
-        <h2>preview:</h2>
-
-        <ReactSortable
-          list={images.map((src, index) => ({ id: index.toString(), src }))}
-          setList={onDragEnd}
-          className="images-container preview-images-container"
-        >
-          {images.map((image, index) => (
-            <li className="images-item" key={index}>
-              <img
-                src={image}
-                alt={`Image ${index}`}
-                width="100%"
-              />
-              <button onClick={() => handleDeleteImage(index)}>X</button>
-            </li>
-          ))}
-        </ReactSortable>
-
-      </div>
+      
     </div>
   );
 };

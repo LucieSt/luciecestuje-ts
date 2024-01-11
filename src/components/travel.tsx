@@ -16,6 +16,7 @@ const Travel = () => {
     text: string;
     images: string[];
     main_image: string;
+    map_url: string | null;
   }
 
   const [selectedTravelData, setSelectedTravelData] = useState<TravelDataProps | null>(null);
@@ -38,7 +39,7 @@ const Travel = () => {
     displayData();
   }, []);
 
-  const { title, start_date, end_date, text, images, main_image } = selectedTravelData || {};
+  const { title, start_date, end_date, text, images, main_image, map_url } = selectedTravelData || {};
 
   const myStyle = { backgroundImage: `url(${main_image})` }
 
@@ -70,6 +71,10 @@ const Travel = () => {
               );
             })}
           </ul>
+          
+          {map_url && <div className="travel-map-container">
+            <iframe src={map_url} width="100%" height="480"></iframe>
+          </div>}
         </>
       )}
     </div>
