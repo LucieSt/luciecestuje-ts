@@ -1,5 +1,6 @@
 import './../styles/home.sass';
 import './../App.sass';
+import NewsletterForm from './newsletterForm';
 
 const Home: React.FC = () => {
 
@@ -46,9 +47,13 @@ const Home: React.FC = () => {
         <div className="text-content">
           <h2>Newsletter</h2><br /><br />
           <p>
-          Přihlaste se k našemu newsletteru a dozvíte se tak jako první o naší nové cestě!<br /><br />
-          --- Tady bude formular newsletteru ---<br /><br /><br />
+          Přihlaste se k našemu newsletteru a buďte mezi prvními, kdo se dozví o naší nové cestě!<br /><br />
+          V každém emailu poskytujeme možnost odhlášení, takže se můžete kdykoli rozhodnout přestat dostávat naše novinky<br /><br />
+          Zde se můžete přihlásit:<br />
           </p>
+
+          <NewsletterForm />
+
           <hr /><br />
 
           <h2>Chcete vědět víc o nás?</h2><br /><br />
