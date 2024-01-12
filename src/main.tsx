@@ -13,6 +13,7 @@ import UploadForm from "./components/uploadForm";
 import { AuthContext } from "./authContext";
 import { AuthProvider } from "./authContext";
 import Zdena from "./components/zdena";
+import Unsubscribe from "./components/unsubscribe";
 
 const AppContainer = () => {
   const { signedIn } = useContext(AuthContext);
@@ -53,6 +54,10 @@ const AppContainer = () => {
         {
           path: "/novacesta",
           element: signedIn ? <UploadForm /> : null,
+        },
+        {
+          path: "/odhlasit-odber",
+          element: <Unsubscribe />,
         },
       ],
     },
