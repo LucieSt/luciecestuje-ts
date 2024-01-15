@@ -195,7 +195,7 @@ const UploadForm = () => {
           />
         </div>
         <div className="form-item">
-          <label>Nahrát fotky</label>
+          <label>Nahrát fotky - minimálně 3</label>
           <CloudinaryUploadWidget
             key={`additional-images-widget`}
             uwConfig={uwConfig}

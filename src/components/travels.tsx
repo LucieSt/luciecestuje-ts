@@ -174,7 +174,7 @@ const Travels = () => {
                         width="100%"
                         height="auto"
                       />
-                      <h3>{cesta.title} {cesta.year} {cesta.country}</h3>
+                      <h3>{cesta.title}</h3>
                     </div>
                   </div>
                 </Link>

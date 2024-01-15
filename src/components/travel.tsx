@@ -54,7 +54,11 @@ const Travel = () => {
             </div>
           </div>
 
-          <p>{text}</p>
+          <div className="text-container">
+            <div className="text-content">
+              <p>{text}</p>
+            </div>
+          </div>
 
           <ul className="images-container">
             {images?.map((image, index) => {
