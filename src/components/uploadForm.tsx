@@ -1,4 +1,4 @@
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "./../firebase";
 import { useState } from "react";
 import CloudinaryUploadWidget from "../CloudinaryUploadWidget";
@@ -6,10 +6,12 @@ import "./../styles/uploadForm.sass";
 import "./../App.sass"
 import { useNavigate } from "react-router-dom";
 import { ReactSortable } from 'react-sortablejs';
+import emailjs from 'emailjs-com';
+import { formatTitleToURL } from "../utils";
 
 interface ImageInfoStructure {
   secure_url: string;
-}
+};
 
 const UploadForm = () => {
   const [title, setTitle] = useState("");
@@ -31,6 +33,42 @@ const UploadForm = () => {
     uploadPreset
   };
 
+  interface EmailProps {
+    userEmail: string;
+    userToken: string;
+    travelTitle: string;
+    travelDescription: string;
+    travelImages: string[];
+  };
+
+  const titleForUrl = formatTitleToURL(title);
+
+  const sendNotificationEmail = ({ userEmail, userToken, travelTitle, travelDescription, travelImages }: EmailProps): void => {
+    const templateParams = {
+      to_email: userEmail,
+      travel_title: travelTitle,
+      travel_description: travelDescription,
+      image_first: travelImages[0],
+      image_second: travelImages[1],
+      image_third: travelImages[2],
+      // travel_link: `https://luciecestuje.cz/cesty/${titleForUrl}`,
+      travel_link: `http://localhost:5173/cesty/${titleForUrl}`,
+      // unsubscribe_link: `https://luciecestuje.cz/odhlasit-odber?token=${userToken}`
+      unsubscribe_link: `http://localhost:5173/odhlasit-odber?token=${userToken}`,
+    };
+
+    const servisId = import.meta.env.VITE_EMAILJS_SERVIS_ID;
+    const userId = import.meta.env.VITE_EMAILJS_USER_ID;
+    const newTravelTemplateId = import.meta.env.VITE_EMAILJS_NEW_TRAVEL_TEMPLATE_ID;
+
+    emailjs.send(servisId, newTravelTemplateId, templateParams, userId)
+      .then((response) => {
+        console.log('Notification email sent!', response.status, response.text);
+      }, (error) => {
+        console.log('Failed to send notification email.', error);
+      });
+  };
+
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const year = new Date(tripStartDate).getFullYear().toString();
@@ -43,6 +81,18 @@ const UploadForm = () => {
     console.log(publicId);
 
     try {
+
+      const subscribersSnapshot = await getDocs(collection(db, 'newsletter_subscribers'));
+      subscribersSnapshot.forEach((doc) => {
+        sendNotificationEmail({
+          userEmail: doc.data().email, 
+          userToken: doc.data().token,
+          travelTitle: title,
+          travelDescription: description,
+          travelImages: images
+        });
+      });
+
       const docRef = await addDoc(collection(db, "travels"), {
         title,
         country,
@@ -66,8 +116,8 @@ const UploadForm = () => {
       setPublicId("");
       setMapUrl("");
 
-      // Navigate to travels
-      navigate('/cesty');
+      // Navigate to new travel
+      navigate(`/cesty/${titleForUrl}`);
 
       alert("New trip has been saved successfully!");
 
