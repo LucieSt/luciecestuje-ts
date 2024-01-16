@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { formatTitleToURL } from "../utils";
+import Lightbox, { ImagesListType } from 'react-spring-lightbox';
 
 const Travel = () => {
 
@@ -20,6 +21,25 @@ const Travel = () => {
   }
 
   const [selectedTravelData, setSelectedTravelData] = useState<TravelDataProps | null>(null);
+
+  const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const openGallery = (index: number) => {
+    setCurrentIndex(index);
+    setShowGallery(true);
+  }
+
+  const closeGallery = () => {
+    setShowGallery(false);
+  }
+
+  const gotoPrevious = () =>
+    currentIndex > 0 && setCurrentIndex(currentIndex - 1);
+
+  const gotoNext = () =>
+    currentIndex + 1 < (images||[]).length &&
+    setCurrentIndex(currentIndex + 1);
 
   const { travelId } = useParams();
 
@@ -40,6 +60,12 @@ const Travel = () => {
   }, []);
 
   const { title, start_date, end_date, text, images, main_image, map_url } = selectedTravelData || {};
+
+  const imagesList: ImagesListType = (images||[]).map((image, index) => ({
+    src: image,
+    loading: 'lazy',
+    alt: `Image ${index + 1}`,
+  }));
 
   const myStyle = { backgroundImage: `url(${main_image})` }
 
@@ -63,18 +89,30 @@ const Travel = () => {
           <ul className="images-container">
             {images?.map((image, index) => {
               return (
-                <li>
+                <li key={index}>
                   <img
-                    key={index.toString()}
                     id={index.toString()}
                     src={image}
                     width="100%"
                     alt={image}
+                    onClick={() => openGallery(index)}
                   ></img>
                 </li>
               );
             })}
           </ul>
+
+          {showGallery && (
+            <Lightbox
+              isOpen={true}
+              onPrev={gotoPrevious}
+              onNext={gotoNext}
+              images={imagesList}
+              currentIndex={currentIndex}
+              onClose={closeGallery}
+              style={{ background: "rgba(0,0,0, 0.9)" }}
+            />
+          )}      
           
           {map_url && <div className="travel-map-container">
             <iframe src={map_url} width="100%" height="480"></iframe>
