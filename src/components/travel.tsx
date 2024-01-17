@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { formatTitleToURL } from "../utils";
-import Lightbox, { ImagesListType } from 'react-spring-lightbox';
+import CoolLightbox from "./lightboxComponents/lightboxSetup";
 
 const Travel = () => {
 
@@ -34,13 +34,6 @@ const Travel = () => {
     setShowGallery(false);
   }
 
-  const gotoPrevious = () =>
-    currentIndex > 0 && setCurrentIndex(currentIndex - 1);
-
-  const gotoNext = () =>
-    currentIndex + 1 < (images||[]).length &&
-    setCurrentIndex(currentIndex + 1);
-
   const { travelId } = useParams();
 
   const displayData = async () => {
@@ -60,12 +53,6 @@ const Travel = () => {
   }, []);
 
   const { title, start_date, end_date, text, images, main_image, map_url } = selectedTravelData || {};
-
-  const imagesList: ImagesListType = (images||[]).map((image, index) => ({
-    src: image,
-    loading: 'lazy',
-    alt: `Image ${index + 1}`,
-  }));
 
   const myStyle = { backgroundImage: `url(${main_image})` }
 
@@ -103,15 +90,7 @@ const Travel = () => {
           </ul>
 
           {showGallery && (
-            <Lightbox
-              isOpen={true}
-              onPrev={gotoPrevious}
-              onNext={gotoNext}
-              images={imagesList}
-              currentIndex={currentIndex}
-              onClose={closeGallery}
-              style={{ background: "rgba(0,0,0, 0.9)" }}
-            />
+            <CoolLightbox images={images || []}  handleClose={closeGallery} currentImageIndex={currentIndex}/>
           )}      
           
           {map_url && <div className="travel-map-container">
