@@ -1,7 +1,21 @@
+import { useState } from 'react';
+import CoolLightbox from "./lightboxComponents/lightboxSetup";
 import './../styles/zdena.sass'
 import './../App.sass';
 
 const Zdena = () => {
+
+  const [showGallery, setShowGallery] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
+  const openGallery = (index: number) => {
+    setCurrentIndex(index);
+    setShowGallery(true);
+  }
+
+  const closeGallery = () => {
+    setShowGallery(false);
+  }
 
 	let images = [
 		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
@@ -49,11 +63,17 @@ const Zdena = () => {
 						src={image}
 						width="100%"
 						alt="image"
+            onClick={() => openGallery(index)}
 						></img>
 					</li>
 					);
 				})}
       </ul>
+
+      {showGallery && (
+        <CoolLightbox images={images || []}  handleClose={closeGallery} currentImageIndex={currentIndex}/>
+      )}  
+
     </div>
   );
 };
