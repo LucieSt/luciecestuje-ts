@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Lightbox, { ImagesListType } from 'react-spring-lightbox';
-import CustomArrowButton from './customArrowButton';
+import CustomButton from './customButton';
 
 interface CoolLightboxProps {
   images: string[];
@@ -35,10 +35,13 @@ const CoolLightbox = ({ images, handleClose, currentImageIndex }: CoolLightboxPr
         onClose={handleClose}
         style={{ background: "rgba(0,0,0, 0.9)" }}
         renderPrevButton={() => (
-          <CustomArrowButton handleClick={gotoPrevious} direction="left"/>
+          <CustomButton handleClick={gotoPrevious} buttonType="left"/>
         )}
         renderNextButton={() => (
-          <CustomArrowButton handleClick={gotoNext} direction="right"/>
+          <CustomButton handleClick={gotoNext} buttonType="right"/>
+        )}
+        renderHeader={() => (
+          <CustomButton handleClick={handleClose} buttonType="close"/>
         )}
       />
     );
