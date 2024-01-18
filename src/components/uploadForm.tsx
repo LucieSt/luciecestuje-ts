@@ -23,6 +23,9 @@ const UploadForm = () => {
   const [mapUrl, setMapUrl] = useState<string>("");
 
   const [publicId, setPublicId] = useState("");
+
+  const [errorMessageTitle, setErrorMessageTitle] = useState("");
+
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -71,6 +74,18 @@ const UploadForm = () => {
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    
+    // control of unique title
+    setErrorMessageTitle("");
+    const querySnapshot = await getDocs(collection(db, "travels"));
+    const isDuplicate = querySnapshot.docs.some(
+      (doc) => formatTitleToURL(doc.data().title) === formatTitleToURL(title)
+    );
+    if (isDuplicate) {
+      setErrorMessageTitle("Cesta s tímto názvem již existuje.");
+      return;
+    }
+
     const year = new Date(tripStartDate).getFullYear().toString();
 
     console.log(title, country, tripStartDate, year, description, images);
@@ -79,6 +94,8 @@ const UploadForm = () => {
 
     const newImages = images.slice(1);
     console.log(publicId);
+
+    const countriesArray = country.split(',').map(c => c.trim());
 
     try {
 
@@ -95,7 +112,7 @@ const UploadForm = () => {
 
       const docRef = await addDoc(collection(db, "travels"), {
         title,
-        country,
+        country: countriesArray,
         start_date: tripStartDate,
         end_date: tripEndDate,
         text: description,
@@ -148,7 +165,7 @@ const UploadForm = () => {
     <div className="form-container">
       <form className="form">
         <div className="form-item">
-          <label>Název cesty</label>
+          <label className={ errorMessageTitle ? "form-error" : "" }>Název cesty</label>
           <input
             type="text"
             value={title}
@@ -229,6 +246,11 @@ const UploadForm = () => {
             Uložit novou cestu
           </button>
         </div>
+
+        {errorMessageTitle && <div className="form-item">
+          <p className="form-error">{errorMessageTitle}</p>
+        </div>}
+
       </form>
       
     </div>

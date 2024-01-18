@@ -9,7 +9,7 @@ import TravelsFilter from "./travelsFilter";
 
 interface TravelDataProps {
     title: string;
-    country: string;
+    country: string[];
     id: string;
     year: string;
     start_date: string;
@@ -46,7 +46,7 @@ const Travels = () => {
       queries.push(where("year", "==", selectedYear.toString()));
     }
     if (selectedCountry && selectedCountry !== prevSelectedCountry) {
-      queries.push(where("country", "==", selectedCountry));
+      queries.push(where("country", "array-contains", selectedCountry));
       if (selectedYear) {
         queries.push(where("year", "==", selectedYear.toString()));
       }
@@ -67,7 +67,8 @@ const Travels = () => {
       }));
 
       if (selectedYear && selectedYear !== prevSelectedYear) {
-        const uniqueCountries = new Set(newData.map(travel => travel.country));
+        const uniqueCountries = new Set<string>();
+        newData.forEach(travel => travel.country.forEach(c => uniqueCountries.add(c)));
         setCountries(Array.from(uniqueCountries).sort());
       }
 
@@ -75,7 +76,8 @@ const Travels = () => {
         const uniqueYears = new Set(newData.map(travel => parseInt(travel.year)));
         setYears(Array.from(uniqueYears).sort((a, b) => b - a));
 
-        const uniqueCountries = new Set(newData.map(travel => travel.country));
+        const uniqueCountries = new Set<string>();
+        newData.forEach(travel => travel.country.forEach(c => uniqueCountries.add(c)));
         setCountries(Array.from(uniqueCountries).sort());
       }
 
