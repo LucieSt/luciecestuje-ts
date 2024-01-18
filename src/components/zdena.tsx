@@ -57,9 +57,8 @@ const Zdena = () => {
       <ul className="images-container">
 				{images?.map((image, index) => {
         return (
-					<li>
+					<li key={index}>
 						<img
-						key={index}
 						src={image}
 						width="100%"
 						alt="image"
