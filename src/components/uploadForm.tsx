@@ -26,6 +26,11 @@ const UploadForm = () => {
 
   const [errorMessageTitle, setErrorMessageTitle] = useState("");
 
+  const [descriptions, setDescriptions] = useState<string[]>([""]);
+  
+  const [imageGroups, setImageGroups] = useState<string[][]>([[]]);
+  const [selectedGroupIndex, setSelectedGroupIndex] = useState<number>(0);
+
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -116,7 +121,7 @@ const UploadForm = () => {
         country: countriesArray,
         start_date: tripStartDate,
         end_date: tripEndDate,
-        text: description,
+        text: descriptions,
         main_image: mainImage,
         images: newImages,
         year,
@@ -145,13 +150,14 @@ const UploadForm = () => {
     }
   };
 
-  const handleImageUpload = (imageInfo: ImageInfoStructure) => {
-    setImages((currentImages) => [...currentImages, imageInfo.secure_url]);
-  };
+  // const handleImageUpload = (imageInfo: ImageInfoStructure) => {
+  //   setImages((currentImages) => [...currentImages, imageInfo.secure_url]);
+  // };
 
-  const handleDeleteImage = async (index: number) => {
-    setImages(images.filter((_, imgIndex) => imgIndex !== index));
-  };
+  // const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+  //   e.preventDefault();
+  //   setImages(images.filter((_, imgIndex) => imgIndex !== index));
+  // };
 
   interface SortableItem {
     id: string;
@@ -160,6 +166,81 @@ const UploadForm = () => {
 
   const onDragEnd = (items: SortableItem[]) => {
     setImages(items.map(item => item.src)); // Mapping back to string array
+  };
+
+  const handleAddTextClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    setDescriptions([...descriptions, ""]); // Add a new empty string to the array
+    console.log(descriptions);
+  };
+
+  const handleRemoveTextClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
+    e.preventDefault();
+    const updatedDescriptions = descriptions.filter((_, idx) => idx !== index);
+    setDescriptions(updatedDescriptions);
+  };
+
+  const handleDescriptionChange = (index: number, value: string) => {
+    const newDescriptions = descriptions.map((desc, i) => {
+      if (i === index) {
+        return value;
+      }
+      return desc;
+    });
+    setDescriptions(newDescriptions);
+  };
+
+  //images new way:
+  const handleAddImageGroup = () => {
+    const newImageGroups = [...imageGroups, []];
+    setImageGroups(newImageGroups);
+    setSelectedGroupIndex(newImageGroups.length - 1); // Set to the new group's index
+  };
+
+  const handleRemoveImageGroup = (groupIndex: number) => {
+    const updatedImageGroups = imageGroups.filter((_, index) => index !== groupIndex);
+    setImageGroups(updatedImageGroups);
+  };
+
+  const handleImageUpload = (imageInfo: ImageInfoStructure) => {
+    const imageUrl = imageInfo.secure_url; // Extract the URL from the image info
+    console.log(imageGroups, selectedGroupIndex);
+    const updatedImageGroups = imageGroups.map((group, index) => {
+      if (index === selectedGroupIndex) {
+        return [...group, imageUrl];
+      }
+      return group;
+    });
+    setImageGroups(updatedImageGroups);
+  };
+
+  const handleImageGroupSort = (newList: { id: string; src: string; }[], groupIndex: number) => {
+    const updatedImageGroups = imageGroups.map((group, index) => {
+      if (index === groupIndex) {
+        // Extract only the 'src' property from each item in the newList
+        return newList.map(item => item.src);
+      }
+      return group;
+    });
+  
+    setImageGroups(updatedImageGroups);
+  };
+
+  const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, imageIndex: number, groupIndex: number) => {
+    e.preventDefault();
+  
+    // Update the specific group by filtering out the image at the specified index
+    const updatedGroup = imageGroups[groupIndex].filter((_, idx) => idx !== imageIndex);
+  
+    // Update the entire imageGroups array with the modified group
+    const updatedImageGroups = imageGroups.map((group, idx) => {
+      if (idx === groupIndex) {
+        return updatedGroup;
+      }
+      return group;
+    });
+  
+    setImageGroups(updatedImageGroups);
   };
 
   return (
@@ -198,13 +279,6 @@ const UploadForm = () => {
           />
         </div>
         <div className="form-item">
-          <label>Popis</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </div>
-        <div className="form-item">
           <label>Mapa</label>
           <input
             type="text"
@@ -212,15 +286,86 @@ const UploadForm = () => {
             onChange={(e) => setMapUrl(e.target.value)}
           />
         </div>
+        <h2>Layout</h2>
+
+        {descriptions.map((description, index) => (
+          <div className="form-item" key={index}>
+            <label>Text {index + 1}</label>
+            <textarea
+              value={description}
+              onChange={(e) => handleDescriptionChange(index, e.target.value)}
+            ></textarea>
+            <button type="button" onClick={(e) => handleRemoveTextClick(e, index)}>X</button>
+          </div>
+        ))}
+
+        <button onClick={(e) => handleAddTextClick(e)}>Přidat text</button>
+
+
+
+        {/* Select Image Group */}
         <div className="form-item">
+          <label>Vybrat skupinu obrázků</label>
+          <select onChange={(e) => setSelectedGroupIndex(parseInt(e.target.value))}>
+            {imageGroups.map((_, index) => (
+              <option value={index} key={index}>
+                Skupina {index + 1}
+              </option>
+            ))}
+          </select>
+          <button type="button" onClick={handleAddImageGroup}>Přidat novou skupinu</button>
+        </div>
+
+        {/* Single Cloudinary Upload Widget */}
+        <div className="form-item">
+          <label>Nahrát fotky</label>
+          <CloudinaryUploadWidget
+            uwConfig={uwConfig}
+            setPublicId={setPublicId}
+            onImageUpload={handleImageUpload}
+          />
+        </div>
+
+        {/* Preview and Remove Image Groups */}
+        {imageGroups.map((groupImages, groupIndex) => (
+        <div key={groupIndex}>
+          <h2>Preview skupiny {groupIndex + 1}:</h2>
+          <ReactSortable
+            list={groupImages.map((src, index) => ({ id: index.toString(), src }))}
+            setList={(newList) => handleImageGroupSort(newList.map(item => item), groupIndex)}
+            className="images-container preview-images-container"
+          >
+            {groupImages.map((image, index) => (
+              <li className="images-item" key={index}>
+                <img src={image} alt={`Image ${index}`} width="100%" />
+                <button onClick={(e) => handleRemoveImage(e, index, groupIndex)}>X</button>
+              </li>
+            ))}
+          </ReactSortable>
+          <button type="button" onClick={() => handleRemoveImageGroup(groupIndex)}>Odstranit skupinu {groupIndex + 1}</button>
+        </div>
+      ))}
+
+        
+
+
+        {/* <div className="form-item">
+          <label>Popis</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></textarea>
+        </div> */}
+        
+        {/* <div className="form-item">
           <label>Nahrát fotky - minimálně 3</label>
           <CloudinaryUploadWidget
             key={`additional-images-widget`}
             uwConfig={uwConfig}
             setPublicId={setPublicId}
             onImageUpload={handleImageUpload}/>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <br />
           <h2>preview:</h2>
 
@@ -236,12 +381,16 @@ const UploadForm = () => {
                   alt={`Image ${index}`}
                   width="100%"
                 />
-                <button onClick={() => handleDeleteImage(index)}>X</button>
+                <button onClick={(e) => handleDeleteImage(e, index)}
+                >X</button>
               </li>
             ))}
           </ReactSortable>
 
-        </div>
+        </div> */}
+
+
+
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>
             Uložit novou cestu
