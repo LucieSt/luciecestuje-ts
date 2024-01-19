@@ -11,3 +11,13 @@ export const formatTitleToURL = (title: string) => {
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/[^\w-]+/g, ''); // Remove all non-word chars
 };
+
+// text format of line breaks
+// export const formatTextWithLineBreaks = (text: string) => {
+//   return text.split('\n').map((line: string, index: number, array: string[]) => (
+//     <>
+//       {line}
+//       {index !== array.length - 1 && <br />}
+//     </>
+//   ));
+// };

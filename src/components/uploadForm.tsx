@@ -47,10 +47,11 @@ const UploadForm = () => {
   const titleForUrl = formatTitleToURL(title);
 
   const sendNotificationEmail = ({ userEmail, userToken, travelTitle, travelDescription, travelImages }: EmailProps): void => {
+    const shortDescription = travelDescription.length > 100 ? travelDescription.slice(0, 500) + "..." : travelDescription;
     const templateParams = {
       to_email: userEmail,
       travel_title: travelTitle,
-      travel_description: travelDescription,
+      travel_description: shortDescription,
       image_first: travelImages[0],
       image_second: travelImages[1],
       image_third: travelImages[2],

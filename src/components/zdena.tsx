@@ -5,25 +5,83 @@ import './../App.sass';
 
 const Zdena = () => {
 
-  const [showGallery, setShowGallery] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  // const [showGallery, setShowGallery] = useState<boolean>(false);
+  // const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const openGallery = (index: number) => {
-    setCurrentIndex(index);
-    setShowGallery(true);
-  }
+  // const galleryImages = [
+  //   [
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg", 
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg", 
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg", 
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg"
+  //   ],
+  //   [ 
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg",
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg",
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg",
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg",
+  //     "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg"
+  //   ]
+  // ];
 
-  const closeGallery = () => {
-    setShowGallery(false);
-  }
+  const galleriesData = [
+    {
+      text: "Během covidové pandemie jsme se rozhodli pro velký projekt - přestavbu dodávkového vozu, který jsme pojmenovali Zdena.\n\nTento projekt jsme realizovali v jihočeské vesnici Dírna, kde jsme v průběhu dvou let, s nákupem vozidla v dubnu 2021, vdechli život našemu mobilnímu domovu.",
+      images: [
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg", 
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg", 
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg", 
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg"
+      ]
+    },
+    {
+      text: "Naším cílem bylo vytvořit komfortní prostor, který by nám umožnil cestovat a pracovat odkudkoliv. Začali jsme úpravou předních sedadel tak, aby byly otočné, a odstranili jsme vnitřní stěnu. Místo ní jsme umístili dva vyjímatelné stoly, díky kterým můžeme v Zdeně pohodlně pracovat. Uvnitř vozu se nachází nádrž na 100 litrů čerstvé vody, umístěná vzadu, a přibližně 20litrová nádrž na šedou vodu pod dřezem.",
+      images: [ 
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg"
+      ]
+    },
+    // ... Add more as needed
+  ];
 
-	let images = [
-		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
-		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg", 
-		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg", 
-		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg", 
-		"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg"
-	]
+  const [galleries, setGalleries] = useState(
+    galleriesData.map(() => ({ show: false, index: 0 }))
+  );
+
+  const openGallery = (galleryIndex: number, imageIndex: number) => {
+    setGalleries(galleries.map((gallery, index) => 
+      index === galleryIndex ? { ...gallery, show: true, index: imageIndex } : gallery
+    ));
+  };
+
+  // Function to close a gallery
+  const closeGallery = (galleryIndex: number) => {
+    setGalleries(galleries.map((gallery, index) => 
+      index === galleryIndex ? { ...gallery, show: false } : gallery
+    ));
+  };
+
+  // const openGallery = (index: number) => {
+  //   setCurrentIndex(index);
+  //   setShowGallery(true);
+  // }
+
+  // const closeGallery = () => {
+  //   setShowGallery(false);
+  // }
+
+	// let images = [
+	// 	"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490222/IMG_1443_acxa9y.jpg", 
+	// 	"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490241/IMG_1547_eegegl.jpg", 
+	// 	"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490275/IMG_2026_c51td9.jpg", 
+	// 	"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490301/IMG_1930_n3p91y.jpg", 
+	// 	"https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1704490257/IMG_1815_sbxgya.jpg"
+	// ]
 
   return (
     <div className="zdena-wrapper">
@@ -54,7 +112,35 @@ const Zdena = () => {
           našich cestách.</p>
         </div>
       </div>
-      <ul className="images-container">
+
+      {galleriesData.map((gallery, galleryIndex) => (
+        <div key={galleryIndex}>
+
+          <div className="text-container">
+            <div className="text-content">
+              <p>{gallery.text}</p>
+            </div>
+          </div>
+
+          <ul className="images-container">
+            {gallery.images.map((image, imageIndex) => (
+              <li key={imageIndex} onClick={() => openGallery(galleryIndex, imageIndex)}>
+                <img src={image} alt={`Gallery ${galleryIndex} Image ${imageIndex}`} />
+              </li>
+            ))}
+          </ul>
+
+          {galleries[galleryIndex].show && (
+            <CoolLightbox 
+              images={gallery.images} 
+              handleClose={() => closeGallery(galleryIndex)} 
+              currentImageIndex={galleries[galleryIndex].index} 
+            />
+          )}
+        </div>
+      ))}
+
+      {/* <ul className="images-container">
 				{images?.map((image, index) => {
         return (
 					<li key={index}>
@@ -71,7 +157,7 @@ const Zdena = () => {
 
       {showGallery && (
         <CoolLightbox images={images || []}  handleClose={closeGallery} currentImageIndex={currentIndex}/>
-      )}  
+      )}   */}
 
     </div>
   );
