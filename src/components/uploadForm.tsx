@@ -1,6 +1,6 @@
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "./../firebase";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CloudinaryUploadWidget from "../CloudinaryUploadWidget";
 import "./../styles/uploadForm.sass";
 import "./../App.sass"
@@ -30,6 +30,11 @@ const UploadForm = () => {
   
   const [imageGroups, setImageGroups] = useState<string[][]>([[]]);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState<number>(0);
+
+  useEffect(() => {
+    console.log('Selected Group Index:', selectedGroupIndex);
+    console.log('Image Groups:', imageGroups);
+  }, [selectedGroupIndex, imageGroups]);
 
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
@@ -159,14 +164,14 @@ const UploadForm = () => {
   //   setImages(images.filter((_, imgIndex) => imgIndex !== index));
   // };
 
-  interface SortableItem {
-    id: string;
-    src: string;
-  }
+  // interface SortableItem {
+  //   id: string;
+  //   src: string;
+  // }
 
-  const onDragEnd = (items: SortableItem[]) => {
-    setImages(items.map(item => item.src)); // Mapping back to string array
-  };
+  // const onDragEnd = (items: SortableItem[]) => {
+  //   setImages(items.map(item => item.src)); // Mapping back to string array
+  // };
 
   const handleAddTextClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -194,24 +199,39 @@ const UploadForm = () => {
   const handleAddImageGroup = () => {
     const newImageGroups = [...imageGroups, []];
     setImageGroups(newImageGroups);
-    setSelectedGroupIndex(newImageGroups.length - 1); // Set to the new group's index
+    // setSelectedGroupIndex(newImageGroups.length - 1); // Set to the new group's index
   };
+
+  const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newSelectedIndex = parseInt(e.target.value);
+    console.log("Selected group index changed to:", newSelectedIndex);
+    setSelectedGroupIndex(newSelectedIndex);
+  }
 
   const handleRemoveImageGroup = (groupIndex: number) => {
     const updatedImageGroups = imageGroups.filter((_, index) => index !== groupIndex);
     setImageGroups(updatedImageGroups);
   };
 
-  const handleImageUpload = (imageInfo: ImageInfoStructure) => {
+  const handleImageUpload = (imageInfo: ImageInfoStructure, widgetSelectedGroupIndex: number) => {
     const imageUrl = imageInfo.secure_url; // Extract the URL from the image info
-    console.log(imageGroups, selectedGroupIndex);
-    const updatedImageGroups = imageGroups.map((group, index) => {
-      if (index === selectedGroupIndex) {
-        return [...group, imageUrl];
+    console.log("Before update:", imageGroups, "Selected group:", widgetSelectedGroupIndex, "New image:", imageUrl);
+  
+    // Update the imageGroups state
+    setImageGroups(previousGroups => {
+      // Clone the previousGroups to avoid direct state mutation
+      const updatedGroups = [...previousGroups];
+  
+      // Add the new image URL to the selected group, ensuring not to overwrite existing images
+      if (updatedGroups[widgetSelectedGroupIndex]) {
+        updatedGroups[widgetSelectedGroupIndex] = [...updatedGroups[widgetSelectedGroupIndex], imageUrl];
+      } else {
+        updatedGroups[widgetSelectedGroupIndex] = [imageUrl];
       }
-      return group;
+  
+      console.log("After update:", updatedGroups);
+      return updatedGroups;
     });
-    setImageGroups(updatedImageGroups);
   };
 
   const handleImageGroupSort = (newList: { id: string; src: string; }[], groupIndex: number) => {
@@ -306,7 +326,7 @@ const UploadForm = () => {
         {/* Select Image Group */}
         <div className="form-item">
           <label>Vybrat skupinu obrázků</label>
-          <select onChange={(e) => setSelectedGroupIndex(parseInt(e.target.value))}>
+          <select onChange={handleGroupChange}>
             {imageGroups.map((_, index) => (
               <option value={index} key={index}>
                 Skupina {index + 1}
@@ -317,11 +337,14 @@ const UploadForm = () => {
         </div>
 
         {/* Single Cloudinary Upload Widget */}
-        <div className="form-item">
+        <div className="form-item" onClick={() => {
+          console.log('novy log:',selectedGroupIndex, imageGroups);
+        }}>
           <label>Nahrát fotky</label>
           <CloudinaryUploadWidget
             uwConfig={uwConfig}
             setPublicId={setPublicId}
+            widgetSelectedGroupIndex={selectedGroupIndex}
             onImageUpload={handleImageUpload}
           />
         </div>
