@@ -213,25 +213,29 @@ const UploadForm = () => {
     setImageGroups(updatedImageGroups);
   };
 
-  const handleImageUpload = (imageInfo: ImageInfoStructure, widgetSelectedGroupIndex: number) => {
+  const handleImageUpload = (imageInfo: ImageInfoStructure, selectedGroupIndex: number) => {
     const imageUrl = imageInfo.secure_url; // Extract the URL from the image info
-    console.log("Before update:", imageGroups, "Selected group:", widgetSelectedGroupIndex, "New image:", imageUrl);
+    console.log("Before update:", imageGroups, "Selected group:", selectedGroupIndex, "New image:", imageUrl);
   
     // Update the imageGroups state
-    setImageGroups(previousGroups => {
-      // Clone the previousGroups to avoid direct state mutation
-      const updatedGroups = [...previousGroups];
-  
-      // Add the new image URL to the selected group, ensuring not to overwrite existing images
-      if (updatedGroups[widgetSelectedGroupIndex]) {
-        updatedGroups[widgetSelectedGroupIndex] = [...updatedGroups[widgetSelectedGroupIndex], imageUrl];
-      } else {
-        updatedGroups[widgetSelectedGroupIndex] = [imageUrl];
-      }
-  
-      console.log("After update:", updatedGroups);
-      return updatedGroups;
-    });
+    setSelectedGroupIndex(a => {
+      setImageGroups(previousGroups => {        
+        // Clone the previousGroups to avoid direct state mutation
+        const updatedGroups = [...previousGroups];
+    
+        // Add the new image URL to the selected group, ensuring not to overwrite existing images
+        if (updatedGroups[a]) {
+          updatedGroups[a] = [...updatedGroups[a], imageUrl];
+        } else {
+          updatedGroups[a] = [imageUrl];
+        }
+    
+        console.log("After update:", updatedGroups);
+        return updatedGroups;
+      });
+      return a
+    })
+
   };
 
   const handleImageGroupSort = (newList: { id: string; src: string; }[], groupIndex: number) => {
@@ -344,7 +348,7 @@ const UploadForm = () => {
           <CloudinaryUploadWidget
             uwConfig={uwConfig}
             setPublicId={setPublicId}
-            widgetSelectedGroupIndex={selectedGroupIndex}
+            selectedGroupIndex={selectedGroupIndex}
             onImageUpload={handleImageUpload}
           />
         </div>
