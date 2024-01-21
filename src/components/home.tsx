@@ -12,10 +12,10 @@ interface TravelData {
   start_date: string;
   end_date: string;
   year: string;
-  text: string;
-  images: string[];
-  main_image: string;
+  text: string[];
+  images: string; // JSON
   map_url: string | null;
+  layout: string; // JSON
 }
 
 const Home: React.FC = () => {
@@ -76,7 +76,7 @@ const Home: React.FC = () => {
           {latestTravel && (
             <div
               className="banner"
-              style={{ backgroundImage: `url(${latestTravel.main_image})`, height: "400px", cursor: "pointer" }}
+              style={{ backgroundImage: `url(${JSON.parse(latestTravel.images)[0][0]})`, height: "400px", cursor: "pointer" }}
               onClick={() => navigate(latestTravelUrl)}
             >
               <div>
