@@ -14,8 +14,8 @@ interface TravelDataProps {
     year: string;
     start_date: string;
     end_date: string;
-    text: string;
-    main_image: string;
+    text: string[];
+    images: string;
 }
 
 const Travels = () => {
@@ -166,12 +166,13 @@ const Travels = () => {
             travelData.map((cesta) => {
               const newTitle = formatTitleToURL(cesta.title);
               const url = `/cesty/${newTitle}`;
+              const main_image = JSON.parse(cesta.images)[0][0];
               return (
                 <Link key={cesta.id} to={url}>
                   <div className="travels-link-container">
                     <div className="travels-container">
                       <img
-                        src={cesta.main_image}
+                        src={main_image}
                         alt={cesta.title}
                         width="100%"
                         height="auto"

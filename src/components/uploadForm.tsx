@@ -1,6 +1,6 @@
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { db } from "./../firebase";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CloudinaryUploadWidget from "../CloudinaryUploadWidget";
 import "./../styles/uploadForm.sass";
 import "./../App.sass"
@@ -13,13 +13,16 @@ interface ImageInfoStructure {
   secure_url: string;
 };
 
+interface LayoutAssignment {
+  type: string;
+  element: string;
+}
+
 const UploadForm = () => {
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState("");
   const [tripStartDate, setTripStartDate] = useState("");
   const [tripEndDate, setTripEndDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState<string[]>([]);
   const [mapUrl, setMapUrl] = useState<string>("");
 
   const [publicId, setPublicId] = useState("");
@@ -31,10 +34,11 @@ const UploadForm = () => {
   const [imageGroups, setImageGroups] = useState<string[][]>([[]]);
   const [selectedGroupIndex, setSelectedGroupIndex] = useState<number>(0);
 
-  useEffect(() => {
-    console.log('Selected Group Index:', selectedGroupIndex);
-    console.log('Image Groups:', imageGroups);
-  }, [selectedGroupIndex, imageGroups]);
+  const [layoutElements, setLayoutElements] = useState<string[]>(["Text 1", "Skupina fotek 1"]);
+
+  const [layoutAssignments, setLayoutAssignments] = useState<LayoutAssignment[]>([]);
+
+  const layoutTypes = ["Hlavní fotka", "Galerie", "Text", "Samostatný obrázek"];
 
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
@@ -99,14 +103,14 @@ const UploadForm = () => {
 
     const year = new Date(tripStartDate).getFullYear().toString();
 
-    console.log(title, country, tripStartDate, year, description, images);
+    console.log(title, country, tripStartDate, year, descriptions, imageGroups);
 
-    const mainImage = images[0];
-
-    const newImages = images.slice(1);
     console.log(publicId);
 
     const countriesArray = country.split(',').map(c => c.trim());
+
+    const serializedImageGroups = JSON.stringify(imageGroups);
+    const serializedLayoutAssignments = JSON.stringify(layoutAssignments);
 
     try {
 
@@ -116,8 +120,8 @@ const UploadForm = () => {
           userEmail: doc.data().email, 
           userToken: doc.data().token,
           travelTitle: title,
-          travelDescription: description,
-          travelImages: images
+          travelDescription: descriptions[0],
+          travelImages: imageGroups[1]
         });
       });
 
@@ -127,10 +131,10 @@ const UploadForm = () => {
         start_date: tripStartDate,
         end_date: tripEndDate,
         text: descriptions,
-        main_image: mainImage,
-        images: newImages,
+        images: serializedImageGroups,
         year,
         map_url: mapUrl,
+        layout: serializedLayoutAssignments,
       });
       console.log("Document written with ID: ", docRef.id);
 
@@ -139,10 +143,11 @@ const UploadForm = () => {
       setCountry("");
       setTripStartDate("");
       setTripEndDate("");
-      setDescription("");
-      setImages([]);
+      setDescriptions([]);
+      setImageGroups([[]]);
       setPublicId("");
       setMapUrl("");
+      setLayoutAssignments([]);
 
       // Navigate to new travel
       navigate(`/cesty/${titleForUrl}`);
@@ -155,34 +160,34 @@ const UploadForm = () => {
     }
   };
 
-  // const handleImageUpload = (imageInfo: ImageInfoStructure) => {
-  //   setImages((currentImages) => [...currentImages, imageInfo.secure_url]);
-  // };
+  const handleLayoutTypeChange = (index: number, type: string) => {
+    const newAssignments = [...layoutAssignments];
+    newAssignments[index] = { ...newAssignments[index], type };
+    setLayoutAssignments(newAssignments);
+  };
 
-  // const handleDeleteImage = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
-  //   e.preventDefault();
-  //   setImages(images.filter((_, imgIndex) => imgIndex !== index));
-  // };
-
-  // interface SortableItem {
-  //   id: string;
-  //   src: string;
-  // }
-
-  // const onDragEnd = (items: SortableItem[]) => {
-  //   setImages(items.map(item => item.src)); // Mapping back to string array
-  // };
+  const handleElementChange = (index: number, element: string) => {
+    const newAssignments = [...layoutAssignments];
+    newAssignments[index] = { ...newAssignments[index], element };
+    setLayoutAssignments(newAssignments);
+  };
 
   const handleAddTextClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    setDescriptions([...descriptions, ""]); // Add a new empty string to the array
-    console.log(descriptions);
+    const newTexts = [...descriptions, ""];
+    setDescriptions(newTexts);
+    setLayoutElements([...layoutElements, `Text ${newTexts.length}`]);
   };
 
   const handleRemoveTextClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number) => {
     e.preventDefault();
     const updatedDescriptions = descriptions.filter((_, idx) => idx !== index);
     setDescriptions(updatedDescriptions);
+    const highestTextElement = layoutElements
+      .filter(el => el.startsWith('Text '))
+      .sort()
+      .pop();
+    setLayoutElements(layoutElements.filter(el => el !== highestTextElement));
   };
 
   const handleDescriptionChange = (index: number, value: string) => {
@@ -199,7 +204,7 @@ const UploadForm = () => {
   const handleAddImageGroup = () => {
     const newImageGroups = [...imageGroups, []];
     setImageGroups(newImageGroups);
-    // setSelectedGroupIndex(newImageGroups.length - 1); // Set to the new group's index
+    setLayoutElements([...layoutElements, `Skupina fotek ${newImageGroups.length}`]);
   };
 
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -211,29 +216,34 @@ const UploadForm = () => {
   const handleRemoveImageGroup = (groupIndex: number) => {
     const updatedImageGroups = imageGroups.filter((_, index) => index !== groupIndex);
     setImageGroups(updatedImageGroups);
+    const highestGroupElement = layoutElements
+      .filter(el => el.startsWith('Skupina fotek '))
+      .sort()
+      .pop();
+    setLayoutElements(layoutElements.filter(el => el !== highestGroupElement));
   };
 
-  const handleImageUpload = (imageInfo: ImageInfoStructure, selectedGroupIndex: number) => {
+  const handleImageUpload = (imageInfo: ImageInfoStructure) => {
     const imageUrl = imageInfo.secure_url; // Extract the URL from the image info
     console.log("Before update:", imageGroups, "Selected group:", selectedGroupIndex, "New image:", imageUrl);
   
     // Update the imageGroups state
-    setSelectedGroupIndex(a => {
+    setSelectedGroupIndex(prevSelectedGroupIndex => {
       setImageGroups(previousGroups => {        
         // Clone the previousGroups to avoid direct state mutation
         const updatedGroups = [...previousGroups];
     
         // Add the new image URL to the selected group, ensuring not to overwrite existing images
-        if (updatedGroups[a]) {
-          updatedGroups[a] = [...updatedGroups[a], imageUrl];
+        if (updatedGroups[prevSelectedGroupIndex]) {
+          updatedGroups[prevSelectedGroupIndex] = [...updatedGroups[prevSelectedGroupIndex], imageUrl];
         } else {
-          updatedGroups[a] = [imageUrl];
+          updatedGroups[prevSelectedGroupIndex] = [imageUrl];
         }
     
         console.log("After update:", updatedGroups);
         return updatedGroups;
       });
-      return a
+      return prevSelectedGroupIndex;
     })
 
   };
@@ -270,6 +280,9 @@ const UploadForm = () => {
   return (
     <div className="form-container">
       <form className="form">
+
+        <h2 className="form-header">Základní údaje</h2>
+
         <div className="form-item">
           <label className={ errorMessageTitle ? "form-error" : "" }>Název cesty</label>
           <input
@@ -310,7 +323,8 @@ const UploadForm = () => {
             onChange={(e) => setMapUrl(e.target.value)}
           />
         </div>
-        <h2>Layout</h2>
+
+        <h2 className="form-header">Texty</h2>
 
         {descriptions.map((description, index) => (
           <div className="form-item" key={index}>
@@ -325,11 +339,11 @@ const UploadForm = () => {
 
         <button onClick={(e) => handleAddTextClick(e)}>Přidat text</button>
 
-
+        <h2 className="form-header">Fotky</h2>
 
         {/* Select Image Group */}
         <div className="form-item">
-          <label>Vybrat skupinu obrázků</label>
+          <label>Vybrat skupinu obrázků:</label>
           <select onChange={handleGroupChange}>
             {imageGroups.map((_, index) => (
               <option value={index} key={index}>
@@ -348,75 +362,54 @@ const UploadForm = () => {
           <CloudinaryUploadWidget
             uwConfig={uwConfig}
             setPublicId={setPublicId}
-            selectedGroupIndex={selectedGroupIndex}
             onImageUpload={handleImageUpload}
           />
         </div>
 
         {/* Preview and Remove Image Groups */}
         {imageGroups.map((groupImages, groupIndex) => (
-        <div key={groupIndex}>
-          <h2>Preview skupiny {groupIndex + 1}:</h2>
-          <ReactSortable
-            list={groupImages.map((src, index) => ({ id: index.toString(), src }))}
-            setList={(newList) => handleImageGroupSort(newList.map(item => item), groupIndex)}
-            className="images-container preview-images-container"
-          >
-            {groupImages.map((image, index) => (
-              <li className="images-item" key={index}>
-                <img src={image} alt={`Image ${index}`} width="100%" />
-                <button onClick={(e) => handleRemoveImage(e, index, groupIndex)}>X</button>
-              </li>
-            ))}
-          </ReactSortable>
-          <button type="button" onClick={() => handleRemoveImageGroup(groupIndex)}>Odstranit skupinu {groupIndex + 1}</button>
-        </div>
-      ))}
+          <div key={groupIndex}>
+            <h2 className="form-header">Preview skupiny {groupIndex + 1}:</h2>
+            <ReactSortable
+              list={groupImages.map((src, index) => ({ id: index.toString(), src }))}
+              setList={(newList) => handleImageGroupSort(newList.map(item => item), groupIndex)}
+              className="images-container preview-images-container"
+            >
+              {groupImages.map((image, index) => (
+                <li className="images-item" key={index}>
+                  <img src={image} alt={`Image ${index}`} width="100%" />
+                  <button onClick={(e) => handleRemoveImage(e, index, groupIndex)}>X</button>
+                </li>
+              ))}
+            </ReactSortable>
+            <button type="button" onClick={() => handleRemoveImageGroup(groupIndex)}>Odstranit skupinu {groupIndex + 1}</button>
+          </div>
+        ))}
 
-        
+        <h2 className="form-header">Seřazení prvků</h2>
 
+        {layoutElements.map((element, index) => (
+          <div key={index}>
+            <select value={layoutAssignments[index]?.type || ''} onChange={e => handleLayoutTypeChange(index, e.target.value)}>
+            <option value="" disabled> --- </option>
+              {layoutTypes.map((type, typeIndex) => (
+                <option key={typeIndex} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            <select value={layoutAssignments[index]?.element || ''} onChange={e => handleElementChange(index, e.target.value)}>
+              <option value="" disabled> --- </option>
+              {layoutElements.map((el, elIndex) => (
+                <option key={elIndex} value={el}>
+                  {el}
+                </option>
+              ))}
+            </select>
+          </div>
+        ))}
 
-        {/* <div className="form-item">
-          <label>Popis</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          ></textarea>
-        </div> */}
-        
-        {/* <div className="form-item">
-          <label>Nahrát fotky - minimálně 3</label>
-          <CloudinaryUploadWidget
-            key={`additional-images-widget`}
-            uwConfig={uwConfig}
-            setPublicId={setPublicId}
-            onImageUpload={handleImageUpload}/>
-        </div> */}
-        {/* <div>
-          <br />
-          <h2>preview:</h2>
-
-          <ReactSortable
-            list={images.map((src, index) => ({ id: index.toString(), src }))}
-            setList={onDragEnd}
-            className="images-container preview-images-container"
-          >
-            {images.map((image, index) => (
-              <li className="images-item" key={index}>
-                <img
-                  src={image}
-                  alt={`Image ${index}`}
-                  width="100%"
-                />
-                <button onClick={(e) => handleDeleteImage(e, index)}
-                >X</button>
-              </li>
-            ))}
-          </ReactSortable>
-
-        </div> */}
-
-
+        <h2 className="form-header" onClick={() => {console.log(layoutAssignments)}}>Uložit a poslat newsletter</h2>
 
         <div className="form-item">
           <button className="form-btn" onClick={handleSubmit}>

@@ -21,8 +21,7 @@ interface ImageInfoStructure {
 interface CloudinaryUploadWidgetProps {
   uwConfig: UwConfigType;
   setPublicId: Dispatch<SetStateAction<string>>;
-  selectedGroupIndex: number;
-  onImageUpload?: (imageInfo: ImageInfoStructure, selectedGroupIndex: number) => void;
+  onImageUpload?: (imageInfo: ImageInfoStructure) => void;
 }
 
 interface UploadResult {
@@ -33,7 +32,7 @@ interface UploadResult {
   };
 }
 
-function CloudinaryUploadWidget({ uwConfig, setPublicId, selectedGroupIndex, onImageUpload }: CloudinaryUploadWidgetProps) {
+function CloudinaryUploadWidget({ uwConfig, setPublicId, onImageUpload }: CloudinaryUploadWidgetProps) {
   const [loaded, setLoaded] = useState(false);
   const [widgetCreated, setWidgetCreated] = useState(false);
 
@@ -65,7 +64,7 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId, selectedGroupIndex, onI
             console.log("Done! Here is the image info: ", result.info);
             setPublicId(result.info.public_id);
             if(onImageUpload) {
-              onImageUpload(result.info, selectedGroupIndex);
+              onImageUpload(result.info);
             }
           }
         }
