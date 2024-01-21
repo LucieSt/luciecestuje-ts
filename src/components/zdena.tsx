@@ -53,6 +53,8 @@ const Zdena = () => {
     galleriesData.map(() => ({ show: false, index: 0 }))
   );
 
+  console.log("galleries:",galleries);
+
   const openGallery = (galleryIndex: number, imageIndex: number) => {
     setGalleries(galleries.map((gallery, index) => 
       index === galleryIndex ? { ...gallery, show: true, index: imageIndex } : gallery
