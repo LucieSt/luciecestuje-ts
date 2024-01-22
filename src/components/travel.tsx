@@ -6,6 +6,7 @@ import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { formatTitleToURL } from "../utils";
 import CoolLightbox from "./lightboxComponents/lightboxSetup";
+import ReactMarkdown from "react-markdown";
 
 const Travel = () => {
 
@@ -109,7 +110,7 @@ const Travel = () => {
         return (
           <div className="text-container" key={index}>
             <div className="text-content">
-              <p>{text?.[parseInt(item.element.replace('Text ', '')) - 1]}</p>
+              <p><ReactMarkdown>{text?.[parseInt(item.element.replace('Text ', '')) - 1]}</ReactMarkdown></p>
             </div>
           </div>
         );
