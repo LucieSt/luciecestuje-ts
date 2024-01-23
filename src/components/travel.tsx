@@ -93,13 +93,13 @@ const Travel = () => {
     switch (item.type) {
       case "Galerie":
         const galleryImages: string[] = parsedImages[elementIndex];
-        const galleryImagesSmaller: string[] = galleryImages.map(image => 
-          addParamsToImageUrl(image, "q_30/")
-        );
+        // const galleryImagesSmaller: string[] = galleryImages.map(image => 
+        //   addParamsToImageUrl(image, "q_30/")
+        // );
         return (
           <>
             <ul key={index} className="images-container">
-              {galleryImagesSmaller.map((image, imgIndex) => (
+              {galleryImages.map((image, imgIndex) => (
                 <li key={imgIndex} onClick={() => openGallery(elementIndex, imgIndex)}>
                   <img src={image} alt={`Gallery Image`} />
                 </li>
