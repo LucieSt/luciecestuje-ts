@@ -73,7 +73,7 @@ const Travel = () => {
 
       // set image URLs to reduce image size
       const modifiedImages = travelImages.map((group: string[]) => 
-        group.map(img => addParamsToImageUrl(img, "c_scale,w_auto/dpr_auto/"))
+        group.map(img => addParamsToImageUrl(img, ""))
       );
   
       setSelectedTravelData({ ...foundTravelData, images: JSON.stringify(modifiedImages) });

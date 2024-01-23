@@ -61,11 +61,14 @@ const UploadForm = () => {
   const titleForUrl = formatTitleToURL(title);
 
   const sendNotificationEmail = ({ userEmail, userToken, travelTitle, travelDescription, travelImages }: EmailProps): void => {
+    const removeMarkdownBold = (text: string) => text.replace(/\*\*(.*?)\*\*/g, '$1');
     const shortDescription = travelDescription.length > 100 ? travelDescription.slice(0, 500) + "..." : travelDescription;
+    const cleanedDescription = removeMarkdownBold(shortDescription);
+
     const templateParams = {
       to_email: userEmail,
       travel_title: travelTitle,
-      travel_description: shortDescription,
+      travel_description: cleanedDescription,
       image_first: travelImages[0],
       image_second: travelImages[1],
       image_third: travelImages[2],
@@ -115,13 +118,14 @@ const UploadForm = () => {
     try {
 
       const subscribersSnapshot = await getDocs(collection(db, 'newsletter_subscribers'));
+      const combinedImages = imageGroups.reduce((acc, group) => acc.concat(group), []);
       subscribersSnapshot.forEach((doc) => {
         sendNotificationEmail({
           userEmail: doc.data().email, 
           userToken: doc.data().token,
           travelTitle: title,
           travelDescription: descriptions[0],
-          travelImages: imageGroups[1]
+          travelImages: combinedImages
         });
       });
 

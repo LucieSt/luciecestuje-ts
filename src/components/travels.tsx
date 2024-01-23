@@ -6,6 +6,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { AuthContext } from "../authContext";
 import { formatTitleToURL } from "../utils";
 import TravelsFilter from "./travelsFilter";
+import { addParamsToImageUrl } from "../utils";
 
 interface TravelDataProps {
     title: string;
@@ -61,10 +62,21 @@ const Travels = () => {
 
     try {
       const querySnapshot = await getDocs(q);
-      const newData = querySnapshot.docs.map((doc) => ({
-        ...doc.data() as TravelDataProps,
-        id: doc.id,
-      }));
+
+      const newData = querySnapshot.docs.map((doc) => {
+        const data = doc.data() as TravelDataProps;
+  
+        // Modify the image URLs
+        const modifiedImages = JSON.parse(data.images).map((group: string[]) => 
+          group.map(img => addParamsToImageUrl(img, ""))
+        );
+  
+        return {
+          ...data,
+          id: doc.id,
+          images: JSON.stringify(modifiedImages)
+        };
+      });
 
       if (selectedYear && selectedYear !== prevSelectedYear) {
         const uniqueCountries = new Set<string>();
