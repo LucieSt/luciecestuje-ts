@@ -12,12 +12,7 @@ export const formatTitleToURL = (title: string) => {
     .replace(/[^\w-]+/g, ''); // Remove all non-word chars
 };
 
-// text format of line breaks
-// export const formatTextWithLineBreaks = (text: string) => {
-//   return text.split('\n').map((line: string, index: number, array: string[]) => (
-//     <>
-//       {line}
-//       {index !== array.length - 1 && <br />}
-//     </>
-//   ));
-// };
+export const addParamsToImageUrl = (url: string, additionalParams = "") => {
+  const urlParts = url.split('/upload/');
+  return `${urlParts[0]}/upload/c_scale,w_auto/dpr_auto/${additionalParams}${urlParts[1]}`;
+};

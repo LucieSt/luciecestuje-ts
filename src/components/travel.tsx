@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { formatTitleToURL } from "../utils";
+import { formatTitleToURL, addParamsToImageUrl } from "../utils";
 import CoolLightbox from "./lightboxComponents/lightboxSetup";
 import ReactMarkdown from "react-markdown";
 
@@ -67,16 +67,21 @@ const Travel = () => {
     });
 
     const foundTravelData = newData.find((cesta) => formatTitleToURL(cesta.title) === travelId);
-    setSelectedTravelData(foundTravelData || null);
 
     if (foundTravelData) {
-        setSelectedTravelData(foundTravelData);
+      const travelImages = foundTravelData.images ? JSON.parse(foundTravelData.images) : [];
 
-        const travelImages = foundTravelData.images ? JSON.parse(foundTravelData.images) : [];
-        setGalleries(travelImages.map(() => ({ show: false, index: 0 })));
+      // set image URLs to reduce image size
+      const modifiedImages = travelImages.map((group: string[]) => 
+        group.map(img => addParamsToImageUrl(img, "c_scale,w_auto/dpr_auto/"))
+      );
+  
+      setSelectedTravelData({ ...foundTravelData, images: JSON.stringify(modifiedImages) });
+      setGalleries(modifiedImages.map(() => ({ show: false, index: 0 })));
     } else {
-        setSelectedTravelData(null);
+      setSelectedTravelData(null);
     }
+
   };
 
   const main_image = parsedImages?.[0]?.[0];
@@ -88,10 +93,13 @@ const Travel = () => {
     switch (item.type) {
       case "Galerie":
         const galleryImages: string[] = parsedImages[elementIndex];
+        const galleryImagesSmaller: string[] = galleryImages.map(image => 
+          addParamsToImageUrl(image, "q_30/")
+        );
         return (
           <>
             <ul key={index} className="images-container">
-              {galleryImages.map((image, imgIndex) => (
+              {galleryImagesSmaller.map((image, imgIndex) => (
                 <li key={imgIndex} onClick={() => openGallery(elementIndex, imgIndex)}>
                   <img src={image} alt={`Gallery Image`} />
                 </li>
@@ -110,7 +118,7 @@ const Travel = () => {
         return (
           <div className="text-container" key={index}>
             <div className="text-content">
-              <p><ReactMarkdown>{text?.[parseInt(item.element.replace('Text ', '')) - 1]}</ReactMarkdown></p>
+              <ReactMarkdown>{text?.[parseInt(item.element.replace('Text ', '')) - 1]}</ReactMarkdown>
             </div>
           </div>
         );
@@ -141,7 +149,7 @@ const Travel = () => {
           {parsedLayout.map(renderLayoutItem)}
           
           {map_url && <div className="travel-map-container">
-            <iframe src={map_url} width="100%" height="480"></iframe>
+            <iframe src={map_url} width="100%" height="100%"></iframe>
           </div>}
         </>
       )}
