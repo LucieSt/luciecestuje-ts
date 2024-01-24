@@ -14,8 +14,8 @@ const NewsletterForm: React.FC = () => {
     const templateParams = {
       to_email: email,
       message_to_customer: "Tohle je dynamicky vlozeny text",
-      // unsubscribe_link: `https://luciecestuje.cz/odhlasit-odber?token=${token}`
-      unsubscribe_link: `http://localhost:5173/odhlasit-odber?token=${token}`
+      unsubscribe_link: `https://luciecestuje.cz/odhlasit-odber?token=${token}`
+      // unsubscribe_link: `http://localhost:5173/odhlasit-odber?token=${token}`
     };
 
     const servisId = import.meta.env.VITE_EMAILJS_SERVIS_ID;

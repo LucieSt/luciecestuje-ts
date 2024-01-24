@@ -72,10 +72,10 @@ const UploadForm = () => {
       image_first: travelImages[0],
       image_second: travelImages[1],
       image_third: travelImages[2],
-      // travel_link: `https://luciecestuje.cz/cesty/${titleForUrl}`,
-      travel_link: `http://localhost:5173/cesty/${titleForUrl}`,
-      // unsubscribe_link: `https://luciecestuje.cz/odhlasit-odber?token=${userToken}`
-      unsubscribe_link: `http://localhost:5173/odhlasit-odber?token=${userToken}`,
+      travel_link: `https://luciecestuje.cz/cesty/${titleForUrl}`,
+      // travel_link: `http://localhost:5173/cesty/${titleForUrl}`,
+      unsubscribe_link: `https://luciecestuje.cz/odhlasit-odber?token=${userToken}`
+      // unsubscribe_link: `http://localhost:5173/odhlasit-odber?token=${userToken}`,
     };
 
     const servisId = import.meta.env.VITE_EMAILJS_SERVIS_ID;
@@ -393,7 +393,7 @@ const UploadForm = () => {
         <h2 className="form-header">Seřazení prvků</h2>
 
         {layoutElements.map((element, index) => (
-          <div key={index}>
+          <div key={element}>
             <select value={layoutAssignments[index]?.type || ''} onChange={e => handleLayoutTypeChange(index, e.target.value)}>
             <option value="" disabled> --- </option>
               {layoutTypes.map((type, typeIndex) => (

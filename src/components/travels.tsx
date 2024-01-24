@@ -162,7 +162,7 @@ const Travels = () => {
               <div className="travels-link-container">
                 <div className="travels-container">
                   <img
-                    src="https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1684698763/xhyozoujfrrnzisptc6v.jpg"
+                    src="https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706089655/DJI_0662_mawxbx.jpg"
                     alt="new"
                     width="100%"
                     height="auto"
