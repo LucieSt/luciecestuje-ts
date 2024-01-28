@@ -11,8 +11,8 @@ const Zdena = () => {
       text: "Během covidové pandemie jsme se rozhodli pro velký projekt - přestavbu dodávky, kterou jsme pojmenovali Zdena.\n\nTento projekt jsme realizovali v jihočeské vesnici Dírna, kde jsme v průběhu dvou let, s nákupem vozidla v dubnu 2021, vdechli život našemu mobilnímu domovu.Naším cílem bylo vytvořit komfortní prostor, který by nám umožnil cestovat a pracovat odkudkoliv.\n\nZačali jsme úpravou předních sedadel tak, aby byly otočné, a odstranili jsme vnitřní stěnu. Místo ní jsme umístili dva vyjímatelné stoly, díky kterým můžeme v Zdeně pohodlně pracovat. Uvnitř vozu se nachází nádrž na 100 litrů čerstvé vody, umístěná vzadu, a přibližně 20litrová nádrž na šedou vodu pod dřezem.",
       images: [
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034116/IMG_5779_ef8iuf.jpg", 
-        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034114/IMG_5313_geiajn.jpg", 
-        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034109/IMG_0354_pcplze.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034114/IMG_5313_geiajn.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034109/IMG_4021_jfdnzk.jpg",
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034118/IMG_6420_ix78le.jpg",
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034114/IMG_5598_n1thqc.jpg",
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034119/IMG_6478_fxvmvr.jpg",
@@ -69,7 +69,15 @@ const Zdena = () => {
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034119/IMG_6423_g1o0l2.jpg",
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034119/IMG_6439_a5pjl7.jpg",
         "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034116/IMG_5878_aqwmfd.jpg",
-        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034112/IMG_4679_a9rwwe.jpg"
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034112/IMG_4679_a9rwwe.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130639/IMG_0354_iqxbtx.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130642/IMG_0353_dzhszg.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130638/IMG_0363_pi0qo1.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130639/IMG_0059_uapume.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130639/IMG_0432_i8jfaq.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706034112/IMG_1815_yjf12d.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130640/IMG_3232_yyklt6.jpg",
+        "https://res.cloudinary.com/dnwbnhdof/image/upload/c_scale,w_auto/dpr_auto/v1706130638/IMG_3256_fgtylm.jpg"
       ]
     }
   ];
