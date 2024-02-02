@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { db } from "./../firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { formatTitleToURL, addParamsToImageUrl } from "../utils";
+import { formatTitleToURL, addParamsToImageUrl, formatDate } from "../utils";
 import CoolLightbox from "./lightboxComponents/lightboxSetup";
 import ReactMarkdown from "react-markdown";
 
@@ -24,6 +24,7 @@ const Travel = () => {
     images: string; // JSON
     map_url: string | null;
     layout: string; // JSON
+    country: string[];
   }
 
   useEffect(() => {
@@ -31,7 +32,12 @@ const Travel = () => {
   }, []);
   
   const [selectedTravelData, setSelectedTravelData] = useState<TravelDataProps | null>(null);
-  const { title, start_date, end_date, text, images, map_url, layout } = selectedTravelData || {};
+  const { title, start_date, end_date, text, images, map_url, layout, country } = selectedTravelData || {};
+
+  const formatedStartDate = start_date ? formatDate(start_date) : '';
+  const formatedEndDate = end_date ? formatDate(end_date) : '';
+
+  const countryString = country?.join(', ');
 
   const parsedImages = images ? JSON.parse(images) : [];
   const parsedLayout = layout ? JSON.parse(layout) : [];
@@ -142,7 +148,13 @@ const Travel = () => {
           <div className="travel-banner banner" style={myStyle}>
             <div>
               <h2 className='banner-headline'>{title}</h2>
-              <p className='banner-subheadline'>{start_date} - {end_date}</p>
+            </div>
+          </div>
+
+          <div className="text-container text-container-no-space">
+            <div className="text-content">
+              <h2>{countryString}</h2>
+              <p>{formatedStartDate} - {formatedEndDate}</p>
             </div>
           </div>
 
